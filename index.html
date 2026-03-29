@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0c0d10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VRTX">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/icons/favicon.ico">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<title>VRTX — Julián Training</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   VRTX — DESIGN SYSTEM
+═══════════════════════════════════════ */
+:root {
+  --bg:       #0c0d10;
+  --bg2:      #111318;
+  --surface:  #161820;
+  --card:     #1a1c24;
+  --card2:    #1f2130;
+  --border:   #252836;
+  --border2:  #2e3146;
+
+  /* Brand */
+  --acid:     #d4ff47;
+  --acid-dim: rgba(212,255,71,0.10);
+  --acid-glow:rgba(212,255,71,0.22);
+  --coral:    #ff5c5c;
+  --sky:      #42c8f5;
+  --violet:   #9d7eff;
+  --amber:    #ffb830;
+  --mint:     #3fffa2;
+
+  --white:    #eeeef0;
+  --muted:    #52556b;
+  --muted2:   #8a8da4;
+
+  --nav-h:    68px;
+  --r:        16px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  background:var(--bg);
+  color:var(--white);
+  font-family:'Barlow',sans-serif;
+  font-size:15px;
+}
+
+/* ═══ SCREENS ═══ */
+.screen{
+  position:absolute;inset:0;
+  bottom:var(--nav-h);
+  overflow-y:auto;
+  overflow-x:hidden;
+  display:none;
+  -webkit-overflow-scrolling:touch;
+}
+.screen.active{display:block;animation:fadeUp .28s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ NOISE OVERLAY ═══ */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.4;
+}
+
+/* ═══ BOTTOM NAV ═══ */
+.nav{
+  position:fixed;bottom:0;left:0;right:0;
+  height:var(--nav-h);
+  background:rgba(12,13,16,.95);
+  backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);
+  display:flex;z-index:999;
+}
+.nb{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:4px;background:none;border:none;
+  color:var(--muted);cursor:pointer;
+  transition:color .2s;padding:6px 0;
+}
+.nb.active{color:var(--acid)}
+.nb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+.nb span{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;font-family:'Barlow',sans-serif}
+
+/* ═══ TYPOGRAPHY ═══ */
+.display{
+  font-family:'Clash Display',sans-serif;
+  font-weight:700;line-height:.95;letter-spacing:-.5px;
+}
+.label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:500}
+
+/* ═══ CARDS ═══ */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r)}
+
+/* ═══ TAGS ═══ */
+.tag{
+  display:inline-flex;align-items:center;
+  font-size:10px;font-weight:700;
+  padding:3px 10px;border-radius:100px;
+  letter-spacing:.5px;text-transform:uppercase;
+}
+.t-acid{background:var(--acid-dim);color:var(--acid);border:1px solid var(--acid-glow)}
+.t-sky{background:rgba(66,200,245,.10);color:var(--sky);border:1px solid rgba(66,200,245,.2)}
+.t-coral{background:rgba(255,92,92,.10);color:var(--coral);border:1px solid rgba(255,92,92,.2)}
+.t-violet{background:rgba(157,126,255,.10);color:var(--violet);border:1px solid rgba(157,126,255,.2)}
+.t-amber{background:rgba(255,184,48,.10);color:var(--amber);border:1px solid rgba(255,184,48,.2)}
+.t-mint{background:rgba(63,255,162,.10);color:var(--mint);border:1px solid rgba(63,255,162,.2)}
+.t-muted{background:rgba(82,85,107,.15);color:var(--muted2);border:1px solid var(--border)}
+
+/* ═══ SCROLL BAR ═══ */
+::-webkit-scrollbar{width:0}
+
+/* ═══════════════════════════════
+   LOGO SVG INLINE
+═══════════════════════════════ */
+.logo-mark{
+  display:inline-flex;align-items:center;gap:10px;
+}
+.logo-svg{width:36px;height:36px}
+.logo-wordmark{font-family:'Clash Display',sans-serif;font-size:22px;font-weight:700;letter-spacing:2px;color:var(--white)}
+.logo-wordmark em{color:var(--acid);font-style:normal}
+
+/* ══════════════════════════════════════════
+   SCREEN HOY
+══════════════════════════════════════════ */
+.hoy-hero{
+  padding:48px 20px 24px;
+  background:linear-gradient(160deg,rgba(212,255,71,.06) 0%,transparent 60%);
+  position:relative;overflow:hidden;
+}
+.hoy-hero::after{
+  content:'';position:absolute;top:-60px;right:-40px;
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(212,255,71,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hoy-greeting{font-size:13px;color:var(--muted2);margin-bottom:6px;font-weight:500}
+.hoy-name{font-family:'Clash Display',sans-serif;font-size:44px;font-weight:700;line-height:.95;letter-spacing:-.5px}
+.hoy-name em{color:var(--acid);font-style:normal}
+.hoy-sub{margin-top:10px;font-size:13px;color:var(--muted);font-style:italic}
+
+.stats-row{
+  display:flex;gap:10px;
+  padding:0 20px 20px;
+}
+.stat-box{
+  flex:1;background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:14px 12px;text-align:center;
+}
+.stat-val{font-family:'Clash Display',sans-serif;font-size:28px;font-weight:700;color:var(--acid)}
+.stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+
+.section-label{padding:8px 20px 10px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+
+/* Day pills */
+.day-strip{display:flex;gap:8px;padding:0 20px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.day-strip::-webkit-scrollbar{display:none}
+.dp{
+  flex-shrink:0;padding:9px 18px;border-radius:100px;
+  border:1px solid var(--border2);background:var(--card);
+  color:var(--muted2);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .2s;letter-spacing:.5px;
+}
+.dp.on{background:var(--acid);color:var(--bg);border-color:var(--acid)}
+
+/* Sessions */
+.sessions-wrap{padding:0 20px;display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.sess-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.sess-head{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;border-bottom:1px solid var(--border);
+}
+.sess-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.d-am{background:var(--amber)}
+.d-pm{background:var(--violet)}
+.d-field{background:var(--sky)}
+.d-rest{background:var(--muted)}
+.sess-info h3{font-size:14px;font-weight:600}
+.sess-info p{font-size:11px;color:var(--muted);margin-top:2px}
+.sess-head .tag{margin-left:auto}
+
+/* Exercise rows */
+.ex-list{padding:4px 0}
+.ex-row{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 16px;cursor:pointer;
+  transition:background .15s;margin:2px 6px;border-radius:10px;
+}
+.ex-row:active{background:rgba(255,255,255,.04)}
+.ex-ico{font-size:22px;flex-shrink:0}
+.ex-info h4{font-size:13px;font-weight:600}
+.ex-info p{font-size:11px;color:var(--muted);margin-top:1px}
+.ex-sets{margin-left:auto;font-family:'Clash Display',sans-serif;font-size:20px;color:var(--acid);flex-shrink:0}
+.ex-arr{color:var(--muted);font-size:16px;flex-shrink:0}
+
+.warn-bar{
+  margin:0 20px 14px;padding:11px 14px;
+  background:rgba(255,92,92,.07);border:1px solid rgba(255,92,92,.18);
+  border-radius:12px;font-size:12px;color:var(--coral);
+  display:flex;gap:8px;line-height:1.5;
+}
+
+/* ══════════════════════════════════════════
+   SCREEN RUTINAS
+══════════════════════════════════════════ */
+.page-head{padding:48px 20px 20px}
+.page-head .label{margin-bottom:8px;display:block}
+.page-head h1{font-family:'Clash Display',sans-serif;font-size:40px;font-weight:700;line-height:.95;letter-spacing:-.5px}
+.page-head h1 em{color:var(--acid);font-style:normal}
+
+.muscle-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:11px;padding:0 20px;
+}
+.mg-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:18px 16px;
+  cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+}
+.mg-card:active{transform:scale(.97)}
+.mg-card::before{
+  content:'';position:absolute;
+  top:-30px;right:-30px;width:80px;height:80px;
+  border-radius:50%;background:var(--ac);opacity:.12;
+  transition:opacity .2s;
+}
+.mg-card:hover::before{opacity:.2}
+.mg-emoji{font-size:30px;margin-bottom:10px;display:block}
+.mg-name{font-family:'Clash Display',sans-serif;font-size:19px;font-weight:700;color:var(--white)}
+.mg-count{font-size:11px;color:var(--muted);margin-top:3px}
+.mg-dot{position:absolute;top:12px;right:12px;width:8px;height:8px;border-radius:50%;background:var(--ac)}
+
+/* ══════════════════════════════════════════
+   PANEL (bottom sheet)
+══════════════════════════════════════════ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:none}
+.overlay.on{display:block;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.sheet{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--bg2);border-radius:24px 24px 0 0;
+  border-top:1px solid var(--border2);
+  z-index:501;max-height:90vh;overflow-y:auto;
+  transform:translateY(100%);
+  transition:transform .36s cubic-bezier(.32,.72,0,1);
+  padding-bottom:calc(var(--nav-h) + 20px);
+}
+.sheet.on{transform:translateY(0)}
+.sheet-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 0}
+.sheet-close{
+  position:absolute;top:16px;right:16px;
+  background:var(--border2);border:none;color:var(--muted2);
+  width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* Exercise sheet */
+.ex-sheet-title{
+  font-family:'Clash Display',sans-serif;font-size:30px;font-weight:700;
+  padding:16px 20px 4px;
+}
+.ex-media{
+  margin:12px 20px;height:200px;
+  border-radius:16px;overflow:hidden;
+  background:var(--card);border:1px solid var(--border2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;
+}
+.ex-media img{width:100%;height:100%;object-fit:contain;padding:10px}
+.ex-media .gif-ico{font-size:48px}
+.ex-media .gif-lbl{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:8px}
+.gif-tag{
+  position:absolute;top:10px;right:10px;
+  background:var(--acid-dim);border:1px solid var(--acid-glow);
+  color:var(--acid);font-size:9px;font-weight:700;
+  padding:3px 8px;border-radius:100px;letter-spacing:.5px;
+}
+
+.sh-section{padding:14px 20px 0}
+.sh-section h3{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.sh-section p{font-size:14px;color:var(--muted2);line-height:1.65}
+
+.m-tags{display:flex;flex-wrap:wrap;gap:6px}
+.m-tag{padding:5px 12px;border-radius:100px;font-size:12px;font-weight:600;border:1px solid var(--border2);color:var(--muted2)}
+.m-tag.pri{background:var(--acid-dim);border-color:var(--acid-glow);color:var(--acid)}
+
+.sets-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px}
+.set-b{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center}
+.set-b .v{font-family:'Clash Display',sans-serif;font-size:30px;font-weight:700;color:var(--acid)}
+.set-b .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+
+.alt-box{
+  margin:14px 20px 0;padding:12px 14px;
+  background:rgba(157,126,255,.07);border:1px solid rgba(157,126,255,.18);
+  border-radius:12px;font-size:13px;color:var(--muted2);line-height:1.5;
+}
+.alt-box strong{color:var(--violet);display:block;margin-bottom:4px;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+
+.science-box{
+  margin:12px 20px 0;padding:12px 14px;
+  background:rgba(66,200,245,.06);border:1px solid rgba(66,200,245,.15);
+  border-radius:12px;font-size:13px;color:var(--muted2);line-height:1.5;
+}
+.science-box strong{color:var(--sky);display:block;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px}
+
+/* ══════════════════════════════════════════
+   SCREEN ASISTENTE (AI + NUTRICIÓN)
+══════════════════════════════════════════ */
+.ai-tabs{
+  display:flex;gap:8px;padding:0 20px 16px;
+}
+.ai-tab{
+  padding:8px 20px;border-radius:100px;border:1px solid var(--border2);
+  background:var(--card);color:var(--muted2);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.ai-tab.on{background:var(--acid);color:var(--bg);border-color:var(--acid)}
+
+/* Chat */
+.chat-wrap{padding:0 20px;display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.b-ai{
+  max-width:90%;padding:12px 15px;border-radius:6px 16px 16px 16px;
+  background:var(--card);border:1px solid var(--border);
+  font-size:13px;color:var(--muted2);line-height:1.6;align-self:flex-start;
+}
+.b-ai strong{color:var(--white);display:block;margin-bottom:5px;font-size:14px}
+.b-user{
+  max-width:85%;padding:12px 15px;border-radius:16px 16px 4px 16px;
+  background:var(--acid);color:var(--bg);font-size:13px;font-weight:600;
+  align-self:flex-end;
+}
+.ai-input-wrap{
+  position:sticky;bottom:0;padding:12px 20px;
+  background:var(--bg2);border-top:1px solid var(--border);
+}
+.ai-input-row{
+  display:flex;gap:8px;background:var(--card);
+  border:1px solid var(--border2);border-radius:14px;padding:10px 14px;
+}
+.ai-input-row input{
+  flex:1;background:none;border:none;outline:none;
+  color:var(--white);font-family:'Barlow',sans-serif;font-size:14px;
+}
+.ai-input-row input::placeholder{color:var(--muted)}
+.ai-send{
+  background:var(--acid);border:none;border-radius:8px;
+  padding:6px 14px;color:var(--bg);font-family:'Barlow',sans-serif;
+  font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.5px;
+}
+
+/* Machine list */
+.machine-list{padding:0 20px;display:flex;flex-direction:column;gap:7px}
+.m-row{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:12px 14px;
+  display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s;
+}
+.m-row:active{border-color:var(--acid)}
+.m-row-ico{font-size:22px;flex-shrink:0}
+.m-row-info h4{font-size:13px;font-weight:600}
+.m-row-info p{font-size:11px;color:var(--muted);margin-top:2px}
+.m-arr{margin-left:auto;color:var(--muted);font-size:16px}
+
+/* Nutrition panel */
+.nutri-goals{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;padding:0 20px 16px;
+}
+.goal-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:14px;cursor:pointer;transition:all .2s;
+}
+.goal-card:active{transform:scale(.97)}
+.goal-ico{font-size:28px;margin-bottom:8px;display:block}
+.goal-name{font-size:13px;font-weight:700;color:var(--white)}
+.goal-sub{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4}
+
+.nutri-panel-head{
+  padding:16px 20px 8px;
+  font-family:'Clash Display',sans-serif;font-size:26px;font-weight:700;
+}
+.menu-card{
+  margin:8px 20px;background:var(--card);border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;
+}
+.menu-time{
+  padding:10px 14px;border-bottom:1px solid var(--border);
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--acid);
+}
+.menu-item{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--muted2);line-height:1.5}
+.menu-item:last-child{border-bottom:none}
+.menu-item strong{color:var(--white);display:block;margin-bottom:2px}
+.menu-macros{
+  display:flex;gap:8px;padding:10px 14px;
+  border-top:1px solid var(--border);background:rgba(212,255,71,.04);
+}
+.macro-b{flex:1;text-align:center}
+.macro-b .mv{font-family:'Clash Display',sans-serif;font-size:18px;font-weight:700;color:var(--acid)}
+.macro-b .ml{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.science-note{
+  margin:8px 20px;padding:12px 14px;
+  background:rgba(66,200,245,.06);border:1px solid rgba(66,200,245,.12);
+  border-radius:12px;font-size:12px;color:var(--muted2);line-height:1.6;
+}
+.science-note strong{color:var(--sky)}
+
+/* ══════════════════════════════════════════
+   SCREEN CONSEJOS
+══════════════════════════════════════════ */
+.tip-list{padding:0 20px;display:flex;flex-direction:column;gap:10px}
+.tip-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.tip-head{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;cursor:pointer;
+}
+.tip-ico{font-size:24px;flex-shrink:0}
+.tip-head h3{font-size:14px;font-weight:600;flex:1;line-height:1.3}
+.tip-chev{color:var(--muted);font-size:14px;transition:transform .25s;flex-shrink:0}
+.tip-card.on .tip-chev{transform:rotate(180deg)}
+.tip-body{
+  display:none;padding:0 16px 16px;
+  font-size:13px;color:var(--muted2);line-height:1.7;
+  border-top:1px solid var(--border);padding-top:14px;
+}
+.tip-card.on .tip-body{display:block}
+.tip-hi{
+  margin-top:12px;padding:11px 13px;
+  background:var(--acid-dim);border:1px solid var(--acid-glow);
+  border-radius:10px;font-size:12px;color:var(--acid);font-weight:600;line-height:1.5;
+}
+.tip-sci{
+  margin-top:10px;padding:11px 13px;
+  background:rgba(66,200,245,.06);border:1px solid rgba(66,200,245,.12);
+  border-radius:10px;font-size:12px;color:var(--sky);line-height:1.5;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ HOY ══════════════ -->
+<div class="screen active" id="s-hoy">
+
+  <div class="hoy-hero">
+    <div class="logo-mark" style="margin-bottom:20px">
+      <svg class="logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="20,2 38,12 38,28 20,38 2,28 2,12" fill="none" stroke="#d4ff47" stroke-width="2"/>
+        <polygon points="20,8 32,15 32,25 20,32 8,25 8,15" fill="none" stroke="#d4ff47" stroke-width="1" opacity=".4"/>
+        <path d="M13 16 L20 10 L27 16 L24 20 L20 14 L16 20 Z" fill="#d4ff47"/>
+        <path d="M16 21 L20 27 L24 21" stroke="#d4ff47" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="logo-wordmark">VR<em>TX</em></span>
+    </div>
+    <p class="hoy-greeting">Hola de vuelta,</p>
+    <div class="hoy-name">JULIÁN <em>⚡</em></div>
+    <p class="hoy-sub">Extremo · Iron Zone</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-val">5</div><div class="stat-lbl">Días activos</div></div>
+    <div class="stat-box"><div class="stat-val">2</div><div class="stat-lbl">Semanas</div></div>
+    <div class="stat-box"><div class="stat-val">12</div><div class="stat-lbl">Sesiones</div></div>
+  </div>
+
+  <div class="section-label">Selecciona el día</div>
+  <div class="day-strip">
+    <div class="dp" onclick="pickDay('lun',this)">LUN</div>
+    <div class="dp on" onclick="pickDay('mar',this)">MAR</div>
+    <div class="dp" onclick="pickDay('mie',this)">MIÉ</div>
+    <div class="dp" onclick="pickDay('jue',this)">JUE</div>
+    <div class="dp" onclick="pickDay('vie',this)">VIE</div>
+    <div class="dp" onclick="pickDay('sab',this)">SÁB</div>
+    <div class="dp" onclick="pickDay('dom',this)">DOM</div>
+  </div>
+
+  <div id="day-out"></div>
+</div>
+
+<!-- ══════════════ RUTINAS ══════════════ -->
+<div class="screen" id="s-rutinas">
+  <div class="page-head">
+    <span class="label">Bloques</span>
+    <h1>RUTINAS <em>&</em><br>EJERCICIOS</h1>
+  </div>
+  <div class="section-label">Grupo muscular</div>
+  <div class="muscle-grid">
+    <div class="mg-card" style="--ac:var(--acid)" onclick="openMuscle('pierna')">
+      <div class="mg-dot"></div><span class="mg-emoji">🦵</span>
+      <div class="mg-name">Pierna</div><div class="mg-count">16 ejercicios</div>
+    </div>
+    <div class="mg-card" style="--ac:var(--coral)" onclick="openMuscle('pecho')">
+      <div class="mg-dot" style="background:var(--coral)"></div><span class="mg-emoji">💪</span>
+      <div class="mg-name">Pecho</div><div class="mg-count">12 ejercicios</div>
+    </div>
+    <div class="mg-card" style="--ac:var(--sky)" onclick="openMuscle('espalda')">
+      <div class="mg-dot" style="background:var(--sky)"></div><span class="mg-emoji">🏋️</span>
+      <div class="mg-name">Espalda</div><div class="mg-count">12 ejercicios</div>
+    </div>
+    <div class="mg-card" style="--ac:var(--violet)" onclick="openMuscle('hombro')">
+      <div class="mg-dot" style="background:var(--violet)"></div><span class="mg-emoji">🎯</span>
+      <div class="mg-name">Hombro</div><div class="mg-count">8 ejercicios</div>
+    </div>
+    <div class="mg-card" style="--ac:var(--coral)" onclick="openMuscle('brazo')">
+      <div class="mg-dot" style="background:var(--coral)"></div><span class="mg-emoji">⚡</span>
+      <div class="mg-name">Brazo</div><div class="mg-count">14 ejercicios</div>
+    </div>
+    <div class="mg-card" style="--ac:var(--mint)" onclick="openMuscle('core')">
+      <div class="mg-dot" style="background:var(--mint)"></div><span class="mg-emoji">🔥</span>
+      <div class="mg-name">Core</div><div class="mg-count">14 ejercicios</div>
+    </div>
+    <div class="mg-card" style="--ac:var(--amber)" onclick="openMuscle('cardio')">
+      <div class="mg-dot" style="background:var(--amber)"></div><span class="mg-emoji">🫀</span>
+      <div class="mg-name">Cardio</div><div class="mg-count">6 variantes</div>
+    </div>
+    <div class="mg-card" style="--ac:var(--coral)" onclick="openMuscle('pliometria')">
+      <div class="mg-dot" style="background:var(--coral)"></div><span class="mg-emoji">🚀</span>
+      <div class="mg-name">Pliometría</div><div class="mg-count">12 ejercicios</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ASISTENTE ══════════════ -->
+<div class="screen" id="s-asistente">
+  <div class="page-head">
+    <span class="label">Inteligencia artificial</span>
+    <h1>ASISTENTE <em>AI</em></h1>
+  </div>
+
+  <div class="ai-tabs">
+    <div class="ai-tab on" onclick="switchAI('gym',this)">🏋️ Gym</div>
+    <div class="ai-tab" onclick="switchAI('nutri',this)">🥗 Nutrición</div>
+  </div>
+
+  <!-- GYM TAB -->
+  <div id="ai-gym">
+    <div class="chat-wrap" id="chat-gym">
+      <div class="b-ai">
+        <strong>🤖 Entrenador VRTX</strong>
+        Hola Julián. Escribe el nombre de una máquina o selecciónala abajo. Te digo qué músculos trabaja y cómo usarla.
+      </div>
+    </div>
+    <div class="section-label">Máquinas disponibles</div>
+    <div class="machine-list">
+      <div class="m-row" onclick="askMachine('prensa')"><span class="m-row-ico">🦵</span><div class="m-row-info"><h4>Prensa de Pierna</h4><p>Cuádriceps · Glúteo</p></div><span class="m-arr">›</span></div>
+      <div class="m-row" onclick="askMachine('jalon')"><span class="m-row-ico">🏋️</span><div class="m-row-info"><h4>Jalón al Pecho</h4><p>Dorsal · Bíceps</p></div><span class="m-arr">›</span></div>
+      <div class="m-row" onclick="askMachine('polea')"><span class="m-row-ico">🎯</span><div class="m-row-info"><h4>Polea Alta / Baja</h4><p>Múltiple</p></div><span class="m-arr">›</span></div>
+      <div class="m-row" onclick="askMachine('pecdeck')"><span class="m-row-ico">💪</span><div class="m-row-info"><h4>Pec Deck</h4><p>Pectoral mayor</p></div><span class="m-arr">›</span></div>
+      <div class="m-row" onclick="askMachine('remo')"><span class="m-row-ico">🚣</span><div class="m-row-info"><h4>Remo Máquina</h4><p>Dorsal · Trapecio</p></div><span class="m-arr">›</span></div>
+      <div class="m-row" onclick="askMachine('hipthrust')"><span class="m-row-ico">🍑</span><div class="m-row-info"><h4>Hip Thrust</h4><p>Glúteo mayor</p></div><span class="m-arr">›</span></div>
+      <div class="m-row" onclick="askMachine('extension')"><span class="m-row-ico">🦵</span><div class="m-row-info"><h4>Extensión Pierna</h4><p>Cuádriceps aislado</p></div><span class="m-arr">›</span></div>
+      <div class="m-row" onclick="askMachine('femoral')"><span class="m-row-ico">🔁</span><div class="m-row-info"><h4>Femoral Máquina</h4><p>Isquiotibiales</p></div><span class="m-arr">›</span></div>
+      <div class="m-row" onclick="askMachine('medicinal')"><span class="m-row-ico">⚽</span><div class="m-row-info"><h4>Balón Medicinal</h4><p>Core · Explosividad</p></div><span class="m-arr">›</span></div>
+      <div class="m-row" onclick="askMachine('yoga')"><span class="m-row-ico">🔵</span><div class="m-row-info"><h4>Pelota de Yoga</h4><p>Core · Estabilidad</p></div><span class="m-arr">›</span></div>
+    </div>
+    <div style="height:80px"></div>
+    <div class="ai-input-wrap">
+      <div class="ai-input-row">
+        <span style="font-size:18px">🔍</span>
+        <input type="text" id="gym-input" placeholder="Escribe una máquina..." />
+        <button class="ai-send" onclick="sendGym()">Consultar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUTRI TAB -->
+  <div id="ai-nutri" style="display:none">
+    <div class="chat-wrap" id="chat-nutri">
+      <div class="b-ai">
+        <strong>🥗 Nutricionista VRTX</strong>
+        Hola Julián. Selecciona tu estado o lo que necesitas lograr y te doy un menú completo con fundamento científico.
+      </div>
+    </div>
+    <div class="section-label">¿Qué necesitas?</div>
+    <div class="nutri-goals">
+      <div class="goal-card" onclick="showMenu('energia')"><span class="goal-ico">⚡</span><div class="goal-name">Más energía</div><div class="goal-sub">Pre-entreno y partido</div></div>
+      <div class="goal-card" onclick="showMenu('recuperacion')"><span class="goal-ico">🔄</span><div class="goal-name">Recuperarme</div><div class="goal-sub">Post-sesión intensa</div></div>
+      <div class="goal-card" onclick="showMenu('masa')"><span class="goal-ico">💪</span><div class="goal-name">Ganar músculo</div><div class="goal-sub">Superávit limpio</div></div>
+      <div class="goal-card" onclick="showMenu('definir')"><span class="goal-ico">✂️</span><div class="goal-name">Definir</div><div class="goal-sub">Sin perder potencia</div></div>
+      <div class="goal-card" onclick="showMenu('hidratacion')"><span class="goal-ico">💧</span><div class="goal-name">Hidratación</div><div class="goal-sub">Doble sesión</div></div>
+      <div class="goal-card" onclick="showMenu('concentracion')"><span class="goal-ico">🧠</span><div class="goal-name">Foco mental</div><div class="goal-sub">Día de partido</div></div>
+    </div>
+    <div id="nutri-out" style="padding-bottom:80px"></div>
+    <div class="ai-input-wrap">
+      <div class="ai-input-row">
+        <span style="font-size:18px">🍽️</span>
+        <input type="text" id="nutri-input" placeholder="Ej: necesito energía rápida..." />
+        <button class="ai-send" onclick="sendNutri()">Preguntar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ CONSEJOS ══════════════ -->
+<div class="screen" id="s-consejos">
+  <div class="page-head">
+    <span class="label">Guía técnica</span>
+    <h1>CONSEJOS <em>&</em><br>CIENCIA</h1>
+  </div>
+  <div class="tip-list" id="tips-list"></div>
+  <div style="height:20px"></div>
+</div>
+
+<!-- ══════════════ MUSCLE SHEET ══════════════ -->
+<div class="overlay" id="ov-muscle" onclick="closeSheet('ov-muscle','sh-muscle')">
+  <div class="sheet" id="sh-muscle" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <button class="sheet-close" onclick="closeSheet('ov-muscle','sh-muscle')">✕</button>
+    <div class="nutri-panel-head" id="muscle-title">PIERNA</div>
+    <div id="muscle-content"></div>
+  </div>
+</div>
+
+<!-- ══════════════ EXERCISE SHEET ══════════════ -->
+<div class="overlay" id="ov-ex" onclick="closeSheet('ov-ex','sh-ex')">
+  <div class="sheet" id="sh-ex" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <button class="sheet-close" onclick="closeSheet('ov-ex','sh-ex')">✕</button>
+    <div class="ex-sheet-title" id="ex-title">EJERCICIO</div>
+
+    <div class="ex-media" id="ex-media">
+      <span class="gif-ico" id="ex-icon">💪</span>
+      <span class="gif-lbl">Ilustración GIF — GitHub</span>
+      <span class="gif-tag">🎬 GIF</span>
+    </div>
+
+    <div class="sh-section">
+      <h3>Músculos</h3>
+      <div class="m-tags" id="ex-muscles"></div>
+    </div>
+    <div class="sh-section">
+      <h3>Volumen</h3>
+      <div class="sets-row">
+        <div class="set-b"><div class="v" id="ex-sets">3</div><div class="l">Series</div></div>
+        <div class="set-b"><div class="v" id="ex-reps">10</div><div class="l">Reps</div></div>
+        <div class="set-b"><div class="v" id="ex-rest">90s</div><div class="l">Descanso</div></div>
+      </div>
+    </div>
+    <div class="sh-section">
+      <h3>Cómo hacerlo</h3>
+      <p id="ex-desc">Descripción aquí.</p>
+    </div>
+    <div class="science-box" id="ex-sci-box">
+      <strong>🔬 Fundamento</strong>
+      <span id="ex-sci"></span>
+    </div>
+    <div class="alt-box" id="ex-alt-box">
+      <strong>↔️ Alternativa</strong>
+      <span id="ex-alt"></span>
+    </div>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ══════════════ NUTRI SHEET ══════════════ -->
+<div class="overlay" id="ov-nutri" onclick="closeSheet('ov-nutri','sh-nutri')">
+  <div class="sheet" id="sh-nutri" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <button class="sheet-close" onclick="closeSheet('ov-nutri','sh-nutri')">✕</button>
+    <div class="nutri-panel-head" id="nutri-title">MENÚ</div>
+    <div id="nutri-content"></div>
+  </div>
+</div>
+
+<!-- ══════════════ BOTTOM NAV ══════════════ -->
+<nav class="nav">
+  <button class="nb active" onclick="go('hoy',this)">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span>Hoy</span>
+  </button>
+  <button class="nb" onclick="go('rutinas',this)">
+    <svg viewBox="0 0 24 24"><path d="M6 5v14M18 5v14M6 8h12M6 16h12"/></svg>
+    <span>Rutinas</span>
+  </button>
+  <button class="nb" onclick="go('asistente',this)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-linecap="round" stroke-width="3"/></svg>
+    <span>Asistente</span>
+  </button>
+  <button class="nb" onclick="go('consejos',this)">
+    <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 3.5-2.5 6-4 7.5V18a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1.5C7.5 15 5 12.5 5 9a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+    <span>Consejos</span>
+  </button>
+</nav>
+
+<script>
+/* ═══════════════════════════════════════
+   DATA — EXERCISES
+═══════════════════════════════════════ */
+const EX = {
+  pierna:[
+    {ico:'🦵',n:'Sentadilla libre',s:'3',r:'8',rest:'90s',m:['Cuádriceps','Glúteo mayor','Isquio','Core'],desc:'Pies a ancho de hombros, puntas 15° hacia afuera. Desciende controlado hasta paralelo al suelo manteniendo el pecho arriba. Empuja el suelo al subir activando el glúteo. Rodillas siempre alineadas con los pies.',sci:'El squat activa más de 200 músculos simultáneamente. Estudios (Escamilla 2001) demuestran que bajar a paralelo maximiza la activación de glúteo y cuádríceps sin aumentar el estrés patelar.',alt:'Sentadilla en máquina Smith: mismos músculos con menos demanda de equilibrio. Ideal si aún no dominas el patrón libre.'},
+    {ico:'⚡',n:'Prensa de pierna',s:'3',r:'10',rest:'75s',m:['Cuádriceps','Glúteo'],desc:'Ajusta el asiento a 90° de rodilla. Pies a ancho de caderas en la mitad inferior de la plataforma. Empuja hasta casi extender (sin bloquear). Baja lentamente 3 segundos.',sci:'La prensa permite aislar el tren inferior con menos demanda de estabilizadores, útil en etapas iniciales para aprender el patrón de empuje (Escamilla et al., 2001).',alt:'Sentadilla hack: similar patrón de empuje pero más libre. Buena progresión desde la prensa.'},
+    {ico:'🚶',n:'Zancadas caminando',s:'3',r:'10',rest:'60s',m:['Cuádriceps','Glúteo','Isquio'],desc:'Paso largo adelante. Rodilla trasera baja cerca del suelo sin tocarlo. Rodilla delantera no pasa la punta del pie. Torso erguido. Alterna piernas caminando.',sci:'Las zancadas trabajan cada pierna de forma unilateral, corrigiendo desequilibrios musculares frecuentes en futbolistas (Myer et al., 2011). Activan el glúteo en mayor rango que la sentadilla bilateral.',alt:'Step-up con mancuerna: mismo estímulo unilateral pero más controlado. Úsalo si tienes inestabilidad en el tobillo.'},
+    {ico:'🍑',n:'Hip Thrust',s:'3',r:'10',rest:'75s',m:['Glúteo mayor','Isquio','Core'],desc:'Espalda alta en banco, pies a ancho de caderas. Empuja las caderas hacia arriba apretando el glúteo al máximo. Sostén 1 segundo arriba. Baja controlado. No arquees la columna lumbar al final.',sci:'El Hip Thrust genera el mayor pico de activación del glúteo mayor de todos los ejercicios de pierna (Contreras et al., 2015). Un glúteo fuerte = más potencia en el sprint y protección de rodilla.',alt:'Puente de glúteo en el suelo: sin banco, misma activación pero menor rango de movimiento. Perfecto para comenzar o como calentamiento.'},
+    {ico:'📈',n:'Extensión de pierna',s:'2',r:'12',rest:'60s',m:['Cuádriceps (aislado)'],desc:'Ajusta el pad sobre el tobillo. Extiende completamente y mantén 1 segundo. Baja lentamente (3 seg). No uses impulso.',sci:'Ejercicio de cadena abierta. Aísla el vasto medial (VMO), crucial para la estabilidad rotuliana. Evidencia apoya su uso como ejercicio accesorio, no principal (Escamilla, 2001).',alt:'Wall sit isométrico: mismo músculo, sin máquina. 3×30s contra la pared.'},
+    {ico:'🔁',n:'Femoral máquina',s:'3',r:'12',rest:'60s',m:['Isquiotibiales'],desc:'Ajusta el pad debajo del tobillo. Dobla la rodilla jalando el talón hacia el glúteo. Aprieta isquio al final. Baja 3 segundos.',sci:'Los isquiotibiales son el músculo más lesionado en fútbol. Fortalecerlos con trabajo excéntrico reduce el riesgo de rotura hasta un 51% (Petersen et al., 2011).',alt:'Nordic curl: la versión más efectiva para prevenir lesiones. Requiere sujeción de los tobillos por un compañero o máquina.'},
+    {ico:'📦',n:'Step-up mancuerna',s:'3',r:'10',rest:'60s',m:['Cuádriceps','Glúteo'],desc:'Sube al banco con una pierna. Empuja solo con esa pierna, sin impulso de la otra. Baja controlado. 10 repeticiones por lado.',sci:'Trabajo unilateral. Mejora la fuerza funcional específica para la zancada del sprint (Myer et al., 2011). También trabaja el equilibrio y propiocepcción del tobillo.',alt:'Sentadilla búlgara: pie trasero en banco. Mayor demanda de estabilidad y rango de movimiento.'},
+    {ico:'🏋️',n:'Peso muerto rumano',s:'3',r:'8',rest:'90s',m:['Isquiotibiales','Glúteo','Espalda baja'],desc:'Pies a ancho de caderas. Bisagra de cadera llevando el torso hacia adelante con la espalda recta. Siente el estiramiento en isquios. Sube apretando glúteo.',sci:'El RDL mejora la fuerza en el rango excéntrico de los isquiotibiales, el más crítico para prevenir lesiones en sprints (Schache et al., 2010).',alt:'Good morning con barra: patrón idéntico. Más énfasis en la zona lumbar.'},
+  ],
+  pecho:[
+    {ico:'💪',n:'Press plano mancuerna',s:'3',r:'10',rest:'75s',m:['Pectoral mayor','Deltoides anterior','Tríceps'],desc:'Tumbado en banco plano. Baja las mancuernas hasta que los codos queden ligeramente por debajo del banco. Empuja hacia arriba juntando levemente al final.',sci:'Las mancuernas permiten mayor rango de movimiento que la barra (Saeterbakken et al., 2011) y activan más fibras musculares estabilizadoras, mejorando la fuerza funcional.',alt:'Press plano con barra: más estable, permite más peso. Úsalo cuando quieras progresar en carga.'},
+    {ico:'📐',n:'Press inclinado mancuerna',s:'3',r:'10',rest:'75s',m:['Pectoral superior','Deltoides anterior'],desc:'Banco a 30-45°. Mismo movimiento que press plano. Trabaja la porción clavicular del pectoral.',sci:'El ángulo de 30° activa significativamente más el pectoral superior que el banco plano sin transferir excesiva carga al deltoides anterior (Trebs et al., 2010).',alt:'Press inclinado en máquina Smith: ideal para aprender el patrón sin preocuparte por el equilibrio.'},
+    {ico:'📉',n:'Press declinado mancuerna',s:'3',r:'10',rest:'75s',m:['Pectoral inferior','Tríceps'],desc:'Banco a −15°. Trabaja la parte inferior del pecho. Cuidado al subir y bajar las mancuernas.',sci:'Activa el esternal del pectoral mayor en mayor proporción. Da definición al corte inferior del pecho (Trebs et al., 2010).',alt:'Fondos en paralelas: misma zona muscular sin banco. Más funcional y transferible.'},
+    {ico:'🤲',n:'Pec Deck (mariposa)',s:'3',r:'12',rest:'60s',m:['Pectoral mayor'],desc:'No abras los brazos más allá del plano del pecho. Junta apretando el pectoral en el centro. Movimiento semicircular controlado.',sci:'Aislamiento total del pectoral. Útil como finalizador después del press. No sustituye a los ejercicios compuestos pero amplifica el estímulo muscular.',alt:'Crossover con polea: misma función pero mayor rango de movimiento y tensión constante durante todo el recorrido.'},
+    {ico:'🔄',n:'Crossover polea',s:'3',r:'12',rest:'60s',m:['Pectoral mayor','Serratos'],desc:'Polea alta. Jala hacia abajo cruzando las manos al centro. La tensión es constante en todo el rango a diferencia de las mancuernas.',sci:'La polea mantiene tensión mecánica constante. La tensión mecánica es uno de los 3 mecanismos principales de hipertrofia (Schoenfeld, 2010).',alt:'Pec Deck: más estable, buena opción si el crossover te resulta difícil de coordinar.'},
+    {ico:'🪑',n:'Fondos en banco',s:'3',r:'10',rest:'60s',m:['Tríceps','Pectoral','Hombro'],desc:'Manos en borde del banco, cuerpo adelante. Baja a 90° de codos. Sube extendiendo. Mantén la espalda cerca del banco.',sci:'Ejercicio compuesto que trabaja tríceps y pecho inferior simultáneamente. Útil para futbolistas porque desarrolla empuje del tren superior sin sobrecargar.',alt:'Triceps dip en paralelas: más demanda, más rango. Progresión natural de los fondos en banco.'},
+    {ico:'🏊',n:'Flexión de codo (push-up)',s:'3',r:'12',rest:'60s',m:['Pectoral','Tríceps','Core'],desc:'Cuerpo recto como tabla. Baja hasta que el pecho casi toque el suelo. Sube extendiendo los brazos. Core apretado todo el tiempo.',sci:'La flexión activa el core de forma simultánea con el pecho, mejorando la transferencia de fuerza entre tren superior e inferior. Esencial para futbolistas (Behm et al., 2010).',alt:'Push-up con elevación de pierna: mismos músculos + más demanda de core y estabilidad.'},
+  ],
+  espalda:[
+    {ico:'🏋️',n:'Jalón cerrado al pecho',s:'3',r:'10',rest:'75s',m:['Dorsal ancho','Bíceps','Romboides'],desc:'Agarre supino a ancho de hombros. Jala hasta el pecho llevando los codos hacia las caderas, no hacia atrás. Contrae el dorsal al final. Sube controlado.',sci:'El jalón es el sustituto de la dominada para principiantes. Activa intensamente el dorsal ancho, que es crítico para la estabilidad del torso en la carrera (Lehman et al., 2004).',alt:'Jalón con agarre ancho: más trapecio y romboides. Varía el agarre cada 4 semanas.'},
+    {ico:'🚣',n:'Remo en máquina',s:'3',r:'10',rest:'75s',m:['Dorsal','Trapecio','Romboides'],desc:'Siéntate erguido. Jala los mangos hacia el abdomen. Lleva los codos hacia atrás. Aprieta las escápulas al final. No inclines el torso.',sci:'El remo horizontal fortalece los retractores escapulares, corrigiendo la postura anteriorizada típica del futbolista. Reduce el riesgo de lesión de hombro.',alt:'Remo con mancuerna: unilateral, más rango. Excelente complemento al remo en máquina.'},
+    {ico:'💪',n:'Remo mancuerna',s:'3',r:'10',rest:'60s',m:['Dorsal ancho','Bíceps'],desc:'Apoya una rodilla y mano en el banco. Jala la mancuerna hacia la cadera (no el hombro). Mantén la espalda paralela al suelo. No rotes el torso.',sci:'Trabajo unilateral que corrige asimetrías entre lado dominante y no dominante, frecuentes en futbolistas por la predominancia de un pie.',alt:'Remo invertido en barra: usar el peso corporal. Más funcional, sin equipo adicional.'},
+    {ico:'🔙',n:'Hiperextensión',s:'3',r:'12',rest:'60s',m:['Espalda baja','Glúteo','Isquio'],desc:'En banco de hiperextensión. Baja el torso a 90°. Sube alineando la espalda con el cuerpo. No hiperextiendas al final.',sci:'Fortalece los extensores de la columna (erectores espinales), fundamentales para la postura durante el sprint y los saltos de cabeza (McGill, 2002).',alt:'Superman en el suelo: sin máquina. Levanta brazos y piernas simultáneamente. Baja intensidad, ideal para calentamiento.'},
+  ],
+  hombro:[
+    {ico:'🎯',n:'Press militar mancuerna',s:'3',r:'10',rest:'75s',m:['Deltoides anterior','Deltoides medial','Tríceps'],desc:'Sentado, espalda apoyada. Mancuernas a altura de hombros, codos a 90°. Empuja hacia arriba sin arquear la espalda. Baja controlado.',sci:'El press overhead activa los 3 haces del deltoides. La posición sentada reduce la compensación lumbar, habitual en principiantes (Saeterbakken et al., 2013).',alt:'Press Arnold: mismo movimiento pero iniciando con palmas hacia adentro y rotando al subir. Mayor activación del deltoides anterior.'},
+    {ico:'↔️',n:'Elevaciones laterales',s:'3',r:'12',rest:'60s',m:['Deltoides medial'],desc:'Brazos ligeramente flexionados. Sube hasta la altura del hombro (no más). Baja lentamente 3 segundos. Poco peso, movimiento controlado.',sci:'El deltoides medial es imposible de aislar con ejercicios compuestos. Este movimiento es la única forma directa de desarrollarlo (Pizzari et al., 2014). Amplia la apariencia del hombro y mejora la estabilidad.',alt:'Elevaciones laterales en polea baja: la polea mantiene tensión en todo el recorrido, superior a la mancuerna para hipertrofia.'},
+    {ico:'🔄',n:'Face pull polea',s:'3',r:'12',rest:'60s',m:['Deltoides posterior','Manguito rotador','Trapecio'],desc:'Cuerda en polea alta. De pie, jala hacia la cara separando las manos al final. Codos arriba. Movimiento de abducción horizontal.',sci:'Uno de los mejores ejercicios para la salud del hombro. Fortalece el manguito rotador y el deltoides posterior, frecuentemente subdesarrollados y origen de lesiones (Reinold et al., 2009).',alt:'Elevación posterior con mancuerna: mismo músculo, sin polea. Tumbado boca abajo en banco inclinado.'},
+    {ico:'🔼',n:'Elevaciones frontales',s:'3',r:'12',rest:'60s',m:['Deltoides anterior'],desc:'Mancuerna o barra. Sube al frente hasta la altura del hombro. Sin impulso. Baja lentamente.',sci:'El deltoides anterior ya se activa fuerte en el press. Las elevaciones frontales son un complemento si hay debilidad específica, no el ejercicio principal.',alt:'Cable front raise: tensión constante en todo el rango. Mejor estímulo que la mancuerna para este músculo.'},
+  ],
+  brazo:[
+    {ico:'💪',n:'Curl con barra',s:'3',r:'12',rest:'60s',m:['Bíceps braquial','Antebrazo'],desc:'Agarre supino a ancho de hombros. Sube la barra sin mover los codos. Aprieta el bíceps al final. Baja lentamente 3 segundos.',sci:'El curl con barra permite mayor carga que la mancuerna, maximizando la tensión mecánica sobre el bíceps braquial. La supinación completa activa la cabeza larga del bíceps (Nakazawa et al., 1993).',alt:'Curl en polea baja: tensión constante en todo el rango de movimiento. Mejor estímulo por tiempo bajo tensión.'},
+    {ico:'🔨',n:'Curl martillo',s:'3',r:'12',rest:'60s',m:['Bíceps braquial','Braquial','Antebrazo'],desc:'Agarre neutro (pulgar arriba). Sube alternando o los dos juntos. Sin balanceo. Movimiento limpio.',sci:'El agarre neutro activa en mayor proporción el braquial y el braquiorradial, músculos que el curl supino no trabaja óptimamente. El braquial es el músculo más potente del codo (Nakazawa et al., 1993).',alt:'Curl en banco inclinado (scott): el ángulo inclinado estira el bíceps en la posición inicial, maximizando el rango útil.'},
+    {ico:'🎯',n:'Curl concentrado',s:'3',r:'12',rest:'45s',m:['Bíceps (pico)'],desc:'Codo apoyado en rodilla interior. Sube hasta máxima contracción. Mantén 1 segundo. Baja muy lentamente.',sci:'El apoyo del codo en la rodilla elimina el balanceo y aísla completamente el bíceps. El movimiento lento aumenta el tiempo bajo tensión, un estímulo clave para la hipertrofia (Schoenfeld, 2010).',alt:'Curl en polea con cuerda sentado: similar aislamiento con resistencia constante.'},
+    {ico:'⬇️',n:'Tríceps en polea',s:'3',r:'12',rest:'60s',m:['Tríceps (3 cabezas)'],desc:'Cuerda o barra en polea alta. Codos pegados al cuerpo. Empuja hacia abajo separando las manos al final. Extiende completamente.',sci:'El tríceps compone el 60% del volumen del brazo. La polea mantiene tensión constante en todo el recorrido, más efectiva que el press para aislar el tríceps (Boeckh-Behrens et al.).',alt:'Extensión de tríceps sobre la cabeza: estira la cabeza larga del tríceps. Complemento perfecto a la polea.'},
+    {ico:'🪑',n:'Fondos en banco (tríceps)',s:'3',r:'10',rest:'60s',m:['Tríceps','Pectoral inferior','Hombro'],desc:'Manos en banco detrás de ti. Cuerpo adelante del banco. Baja a 90° de codos. Sube extendiendo.',sci:'Ejercicio de cadena cerrada. El tríceps trabaja en toda su extensión. Para enfocarte en el tríceps: mantén el cuerpo muy cerca del banco y los codos apuntando hacia atrás.',alt:'Paralelas: progresión natural. Más rango de movimiento y más carga (peso corporal completo).'},
+    {ico:'🔙',n:'Press cerrado barra',s:'3',r:'8',rest:'75s',m:['Tríceps','Pectoral','Deltoides anterior'],desc:'Barra con agarre estrecho (25-30 cm). Baja lentamente al pecho. Empuja extendiendo completamente. Codos ligeramente hacia adentro.',sci:'El press cerrado es el mejor ejercicio compuesto para el tríceps. Permite cargas altas y trabaja las 3 cabezas del tríceps simultáneamente (Boeckh-Behrens et al.).',alt:'Press francés (skull crusher): mayor aislamiento del tríceps. Cuidado con la extensión completa para no sobrecargar el codo.'},
+    {ico:'🔄',n:'Curl bíceps polea baja',s:'3',r:'12',rest:'45s',m:['Bíceps','Antebrazo'],desc:'De pie frente a la polea baja. Jala hacia los hombros. La resistencia es constante en todo el rango a diferencia de la mancuerna.',sci:'La polea aplica tensión constante (incluida la posición de estiramiento), maximizando el tiempo bajo tensión y la señal hipertrófica. Superior a la mancuerna para volumen muscular.',alt:'Curl mancuerna con supinación: girar la muñeca al subir activa mejor la cabeza larga del bíceps.'},
+    {ico:'🏋️',n:'Extensión tríceps cabeza',s:'3',r:'12',rest:'60s',m:['Tríceps (cabeza larga)'],desc:'Mancuerna sobre la cabeza con ambas manos. Codos cerca de las orejas. Baja la mancuerna detrás de la cabeza. Sube extendiendo.',sci:'La cabeza larga del tríceps solo se estira completamente cuando el brazo está en flexión sobre la cabeza. Esta posición es la única que trabaja óptimamente esa porción (Boeckh-Behrens et al.).',alt:'Tríceps polea sobre cabeza con cuerda: misma posición, resistencia constante. Mejor para hipertrofia.'},
+  ],
+  core:[
+    {ico:'🔲',n:'Plancha frontal',s:'3',r:'40s',rest:'45s',m:['Transverso abdominal','Core global','Glúteo'],desc:'Cuerpo recto como tabla. No subas caderas ni las dejes caer. Aprieta glúteo y abdomen simultáneamente. Respira de forma normal.',sci:'La plancha activa el transverso abdominal, el músculo más profundo del core. Su función es estabilizar la columna durante cualquier movimiento. Un core fuerte = transferencia de fuerza eficiente entre tren superior e inferior (McGill, 2002).',alt:'Plancha con elevación alterna de brazo: mismo estímulo + antirotación. Progresión natural de la plancha estática.'},
+    {ico:'◼️',n:'Plancha lateral',s:'3',r:'25s',rest:'45s',m:['Oblicuos','Cuadrado lumbar','Core lateral'],desc:'Apoyo en antebrazo y borde del pie. Caderas alineadas con el cuerpo. No dejes caer la cadera. Mira hacia adelante.',sci:'La plancha lateral activa el cuadrado lumbar y los oblicuos, músculos clave para los cambios de dirección y los desbordes del extremo (McGill, 2002).',alt:'Plancha lateral con rotación: llevar el brazo libre bajo el cuerpo rotando. Añade movilidad torácica al estímulo de fuerza.'},
+    {ico:'🚴',n:'Crunch bicicleta',s:'3',r:'20',rest:'45s',m:['Oblicuos','Recto abdominal'],desc:'Codo hacia rodilla opuesta. Movimiento controlado. No jalones el cuello. Extiende la pierna libre simultáneamente.',sci:'El crunch bicicleta genera la mayor activación del recto abdominal y oblicuo externo de todos los ejercicios de abdomen (ACE, 2001). Ideal para deportistas de campo.',alt:'Crunch en banco declinado: mayor rango de movimiento que el crunch en el suelo. Más estímulo para el recto abdominal.'},
+    {ico:'🐛',n:'Dead bug',s:'3',r:'10',rest:'45s',m:['Transverso','Core profundo','Coordinación'],desc:'Boca arriba, brazos al cielo, rodillas a 90°. Baja brazo izquierdo y pierna derecha sin despegar la espalda baja. Regresa y alterna.',sci:'El dead bug entrena la función primaria del core: resistir la extensión lumbar mientras se mueven las extremidades, el patrón exacto de la carrera (Hibbs et al., 2008).',alt:'Bird dog (en cuadrupedia): mismo patrón pero desde posición de 4 puntos. Útil si el dead bug es demasiado demandante al inicio.'},
+    {ico:'🌀',n:'Rueda abdominal',s:'3',r:'8',rest:'60s',m:['Core','Transverso','Dorsal','Hombros'],desc:'Rodillas en el suelo. Extiende la rueda lentamente hasta casi tocar el suelo. Contrae el abdomen para volver. Espalda absolutamente recta.',sci:'La rueda abdominal genera alta activación del recto abdominal y del dorsal ancho simultáneamente. La demanda excéntrica en la extensión es la más alta entre todos los ejercicios de core (Escamilla et al., 2010).',alt:'Rollout con barra: misma mecánica usando una barra con discos en lugar de rueda.'},
+    {ico:'🎯',n:'Palof press (polea)',s:'3',r:'10',rest:'60s',m:['Core','Oblicuos','Transverso'],desc:'De pie lateral a la polea. Sostén la manija frente al pecho. Empuja hacia adelante sin rotar el torso. Regresa lento. Cambia lado.',sci:'Ejercicio de antirotación. Fortalece el core en el plano transversal, esencial para los regates del extremo donde el torso debe permanecer estable mientras las piernas giran (Behm et al., 2010).',alt:'Chop con polea: movimiento diagonal de arriba abajo. Similar estímulo de antirotación con mayor activación de oblicuos.'},
+    {ico:'⚽',n:'Slam balón medicinal',s:'3',r:'10',rest:'60s',m:['Core','Dorsal','Deltoides','Tríceps'],desc:'Balón medicinal sobre la cabeza. Lánzalo al suelo con toda la fuerza. Recógelo. Movimiento explosivo.',sci:'Combina fuerza y potencia. El patrón de slam activa toda la cadena posterior. El componente excéntrico (atrapar el balón) mejora la absorción de impacto, clave para futbolistas (Faigenbaum et al., 2009).',alt:'Russian twist con balón medicinal: sentado, gira el torso de lado a lado. Mismo equipamiento, énfasis en oblicuos.'},
+    {ico:'🔵',n:'Crunch con pelota yoga',s:'3',r:'15',rest:'45s',m:['Recto abdominal','Oblicuos','Estabilizadores'],desc:'Sentado en la pelota de yoga, camina hacia adelante hasta que la espalda baja quede apoyada. Haz el crunch desde esa posición.',sci:'La pelota inestable activa más fibras musculares estabilizadoras que el crunch en el suelo (Vera-Garcia et al., 2000). Mejora la propiocepción del core, esencial para el equilibrio en el 1vs1.',alt:'Crunch en banco declinado: más carga, más rango. Progresión para cuando la pelota de yoga resulta demasiado inestable.'},
+    {ico:'🦵',n:'Elevación de piernas',s:'3',r:'12',rest:'45s',m:['Recto abdominal inferior','Psoas'],desc:'Boca arriba. Sube piernas a 90° sin despegar la espalda baja. Baja lentamente sin llegar a tocar el suelo.',sci:'Activa la porción inferior del recto abdominal y el psoas ilíaco. Este último es clave para la velocidad de zancada en el sprint y los cambios de ritmo del extremo.',alt:'Levantamiento de rodillas colgado en barra: mucho mayor rango y activación. Progresión avanzada.'},
+  ],
+  cardio:[
+    {ico:'⚡',n:'Sprints 10–20m',s:'6',r:'rep',rest:'90s',m:['Global cardiovascular','Pierna','Core'],desc:'Posición de salida semiflexionada. Primera zancada explosiva. Técnica de brazos activa (90°). Descanso completo entre repeticiones.',sci:'Los sprints cortos mejoran la producción de potencia neuromuscular y la capacidad anaeróbica aláctica (ATP-PC). Más específicos para el fútbol que el cardio continuo (Reilly & Thomas, 1976).',alt:'Sprint en cuesta: misma distancia pero con inclinación. Mayor resistencia, menos impacto articular.'},
+    {ico:'💨',n:'Sprints 30–40m',s:'4',r:'rep',rest:'2min',m:['Global cardiovascular','Isquio','Glúteo'],desc:'Sprint máximo de 30-40m. Descanso completo. Calidad > cantidad. Si la velocidad baja notablemente, termina la sesión.',sci:'Mejoran la velocidad máxima (Vmax) y la capacidad de mantenerla. En fútbol, el 96% de los sprints son menores a 30m pero la velocidad máxima alcanzada influye en sprints más cortos (Haugen et al., 2013).',alt:'Sprints en escaleras (si hay acceso): mayor demanda de elevación de rodilla, mejora la zancada.'},
+    {ico:'🫀',n:'HIIT 30/30',s:'10',r:'rondas',rest:'activo',m:['Sistema cardiovascular'],desc:'30 segundos sprint / 30 segundos trote suave. 10 rondas. Calentamiento 5 min antes.',sci:'El HIIT mejora el VO2max en menor tiempo que el cardio continuo. Simula el perfil metabólico intermitente de un partido de fútbol (Helgerud et al., 2007).',alt:'Tabata (20s/10s × 8): mayor intensidad, menor tiempo total. Para cuando el HIIT 30/30 se vuelva demasiado fácil.'},
+    {ico:'🚶',n:'Trote suave recuperación',s:'1',r:'20-25min',rest:'—',m:['Cardiorrespiratorio','Recuperación activa'],desc:'Ritmo de conversación. Frecuencia cardíaca 60-65% del máximo. Nunca al límite.',sci:'El trote suave mejora el clearance de lactato post-esfuerzo y activa la circulación sin generar fatiga adicional. Facilita la recuperación entre sesiones (Bishop et al., 2008).',alt:'Ciclismo suave: mismo beneficio con menor impacto articular. Útil el día después de entrenamiento intenso de pierna.'},
+  ],
+  pliometria:[
+    {ico:'📦',n:'Saltos al cajón',s:'4',r:'5',rest:'90s',m:['Cuádriceps','Glúteo','Pantorrilla','Core'],desc:'Desde el suelo, salta explosivamente al cajón. Aterriza con ambos pies, rodillas semiflexionadas. Baja caminando NUNCA saltando.',sci:'Los saltos al cajón mejoran la tasa de desarrollo de fuerza (RFD), la variable más directamente relacionada con la velocidad de sprint en futbolistas (Cronin & Hansen, 2005).',alt:'Salto al step o banco: sin cajón específico. Misma mecánica, menor altura.'},
+    {ico:'⚡',n:'Saltos pliométricos',s:'4',r:'8',rest:'75s',m:['Pierna completa','Core'],desc:'Saltos verticales continuos. Mínimo tiempo en el suelo entre cada salto. Aterriza con rodillas semiflexionadas.',sci:'El ciclo de acortamiento-estiramiento (SSC) mejora la eficiencia elástica del tendón. Más resorte = menos energía gastada por zancada = más resistencia (Komi, 2003).',alt:'Saltos de cuerda (speed): mismo SSC con mayor componente cardiovascular. Excelente calentamiento.'},
+    {ico:'🔀',n:'Skipping alto',s:'3',r:'20s',rest:'60s',m:['Psoas','Cuádriceps','Core'],desc:'Rodillas al pecho alternativamente a máxima velocidad. Brazos activos. Mantén el torso erguido.',sci:'El skipping mejora la frecuencia de zancada (cadencia), una de las dos variables de la velocidad de carrera (velocidad = cadencia × longitud de zancada). Esencial para extremos (Haugen et al., 2013).',alt:'Skipping bajo (ankling): rozar apenas el suelo alternando pies. Mejora la rigidez del tobillo y el tiempo de contacto.'},
+    {ico:'🏃',n:'Salidas explosivas',s:'5',r:'rep',rest:'60s',m:['Cuádriceps','Glúteo','Pantorrilla'],desc:'Desde parado. Primera zancada con máxima potencia. Aceleración máxima en los primeros 10m.',sci:'La fase de aceleración (0-10m) es la más determinante en fútbol. El 95% de los sprints ocurren desde parado o velocidad baja (Reilly & Thomas, 1976). Entrenarla directamente es crítico para el extremo.',alt:'Salidas desde posición de 3 apoyos: más específico. Imita la salida del sprint en partidos.'},
+    {ico:'⚽',n:'Lanzamiento balón medicinal (pared)',s:'3',r:'10',rest:'60s',m:['Core','Hombros','Pectoral'],desc:'De pie frente a la pared. Lanza el balón medicinal con ambas manos desde el pecho. Recibe el rebote y repite.',sci:'Combina fuerza explosiva del tren superior con estabilización del core. El componente reactivo (rebote) mejora el tiempo de reacción neuromuscular (Faigenbaum et al., 2009).',alt:'Slam al suelo: si no hay pared. Mismo componente explosivo pero sin el estímulo reactivo.'},
+    {ico:'🔵',n:'Plancha con balón medicinal',s:'3',r:'30s',rest:'60s',m:['Core','Estabilizadores','Manguito rotador'],desc:'Plancha con las manos sobre el balón medicinal. El balón es inestable, el core trabaja el doble.',sci:'La superficie inestable aumenta la activación del core hasta un 38% comparado con la plancha estándar (Vera-Garcia et al., 2000). Mejora la propiocepción.',alt:'Plancha sobre pelota yoga: mayor inestabilidad, mayor activación. Progresión del balón medicinal.'},
+    {ico:'🎯',n:'Rotación balón medicinal (torso)',s:'3',r:'12',rest:'45s',m:['Oblicuos','Core rotacional'],desc:'De pie, pies fijos. Gira el torso de lado a lado con el balón medicinal. Brazos extendidos. Movimiento explosivo pero controlado.',sci:'Los extremos giran el torso cientos de veces por partido. Un core rotacional fuerte genera más potencia en el regate y el disparo cruzado (Behm et al., 2010).',alt:'Russian twist en el suelo: mismo movimiento pero sentado. Menor demanda de equilibrio.'},
+    {ico:'🔵',n:'Crunch explosivo pelota yoga',s:'3',r:'12',rest:'45s',m:['Recto abdominal','Flexores de cadera'],desc:'Sentado sobre pelota de yoga. Cae hacia atrás controlado y sube de forma explosiva. La inestabilidad activa más fibras.',sci:'La inestabilidad de la pelota fuerza al core a activarse durante todo el movimiento, no solo en la fase de acción (Vera-Garcia et al., 2000). Aumenta el reclutamiento motor.',alt:'Crunch en banco declinado: más carga controlada. Mejor opción si la pelota te resulta demasiado inestable.'},
+  ]
+};
+
+/* ═══════════════════════════════════════
+   DATA — MACHINES
+═══════════════════════════════════════ */
+const MACHINES = {
+  prensa:{ico:'🦵',n:'Prensa de Pierna',pri:['Cuádriceps','Glúteo mayor'],sec:['Isquiotibiales','Pantorrilla'],tip:'Regula el respaldo para que las rodillas lleguen a 90°. Pies más arriba = más glúteo. Pies más abajo = más cuádriceps. No bloquees las rodillas al extender. No despegues la espalda del respaldo.'},
+  jalon:{ico:'🏋️',n:'Jalón al Pecho',pri:['Dorsal ancho','Romboides'],sec:['Bíceps','Trapecio inferior'],tip:'Jala hasta el pecho alto (no al cuello). Lleva los codos hacia las caderas, no hacia atrás. Inclínate ligeramente hacia atrás. Baja la barra en frente, nunca detrás de la nuca.'},
+  polea:{ico:'🎯',n:'Polea Alta / Baja',pri:['Varía según el ejercicio'],sec:['Core siempre activo'],tip:'Polea alta jalando: dorsal y bíceps. Polea alta empujando hacia abajo: tríceps. Polea baja jalando: dorsal bajo y romboides. La cuerda permite mayor rango que la barra.'},
+  pecdeck:{ico:'💪',n:'Pec Deck',pri:['Pectoral mayor','Pectoral menor'],sec:['Deltoides anterior'],tip:'No abras los brazos más allá del plano del pecho (riesgo de lesión del labrum). Junta apretando el pectoral en el centro. Usa como finalizador después del press, no como ejercicio principal.'},
+  remo:{ico:'🚣',n:'Remo Máquina',pri:['Dorsal ancho','Trapecio','Romboides'],sec:['Bíceps','Deltoides posterior'],tip:'Siéntate erguido, no te inclines hacia adelante con inercia. Jala hacia el abdomen, no hacia el pecho. Aprieta las escápulas al final del movimiento. Controla el regreso.'},
+  hipthrust:{ico:'🍑',n:'Hip Thrust',pri:['Glúteo mayor','Glúteo medio'],sec:['Isquiotibiales','Core'],tip:'Espalda alta en el banco (no los omóplatos). Pies a ancho de caderas. Empuja hacia arriba apretando el glúteo máximo. 1 segundo arriba. No hiperextiendas la columna lumbar al final.'},
+  extension:{ico:'🦵',n:'Extensión de Pierna',pri:['Cuádriceps (aislado)'],sec:[],tip:'Ajusta el pad sobre el tobillo, no el pie. Extiende completamente y mantén 1 segundo. Baja 3 segundos. No rebotes en la parte baja. Ejercicio accesorio, no el principal de la sesión.'},
+  femoral:{ico:'🔁',n:'Femoral Máquina',pri:['Isquiotibiales (aislado)'],sec:['Pantorrilla'],tip:'Ajusta el pad debajo del tobillo. Dobla la rodilla jalando el talón hacia el glúteo. Aprieta el isquio al final. Baja lentamente (3 seg). Es el músculo más lesionado en fútbol: cuídalo bien.'},
+  medicinal:{ico:'⚽',n:'Balón Medicinal',pri:['Core','Tren superior'],sec:['Explosividad','Coordinación'],tip:'Usa para slams, rotaciones de torso, lanzamientos contra pared y planchas. El peso añade resistencia a movimientos explosivos. Elige un peso que permita velocidad (2-4 kg para principiantes). El objetivo es POTENCIA, no fuerza lenta.'},
+  yoga:{ico:'🔵',n:'Pelota de Yoga',pri:['Core','Estabilizadores profundos'],sec:['Propiocepción','Equilibrio'],tip:'Úsala para crunches, planchas y sentadillas. La inestabilidad activa hasta un 38% más de fibras del core. No la uses para ejercicios de mucho peso (riesgo de caída). Ideal al final de la sesión de core o para movilidad.'},
+};
+
+/* ═══════════════════════════════════════
+   DATA — NUTRITION
+═══════════════════════════════════════ */
+const MENUS = {
+  energia:{
+    title:'⚡ Más Energía',
+    goal:'Pre-entrenamiento y partido',
+    sci:'Los carbohidratos de índice glucémico medio-alto son el combustible principal del músculo en esfuerzos intensos. El glucógeno muscular es el limitante del rendimiento en fútbol (Burke et al., 2011). La cafeína mejora el rendimiento entre un 3-7% (Grgic et al., 2020).',
+    menus:[
+      {time:'2-3 horas antes',items:[{n:'Avena con plátano y miel',d:'80g avena + 1 plátano + 1 cucharada miel. Alto en carbohidratos de digestión media.'},{n:'Huevos revueltos (2)',d:'Proteína de alta biodisponibilidad. Mantiene el nivel de aminoácidos en sangre.'},{n:'Jugo de naranja natural',d:'Vitamina C + carbohidratos rápidos. Hidratación parcial.'}]},
+      {time:'30-45 min antes',items:[{n:'Banano + café negro',d:'Glucosa rápida + cafeína. El combo más efectivo respaldado por evidencia (Grgic, 2020).'},{n:'Puñado de uvas o dátiles',d:'Fructosa + glucosa. Energía inmediata sin caída brusca.'}]},
+      {time:'Snack urgente (15 min)',items:[{n:'Gel energético o tableta glucosa',d:'En caso de no haber comido. Solo para emergencias, no hábito.'}]},
+    ],
+    macros:{c:'65-70%',p:'15-20%',g:'10-15%',kcal:'500-700'}
+  },
+  recuperacion:{
+    title:'🔄 Recuperación',
+    goal:'Post-sesión intensa',
+    sci:'La ventana anabólica de 30-60 min post-ejercicio maximiza la síntesis proteica. La relación carbohidratos:proteína de 3:1 acelera la resíntesis de glucógeno (Ivy et al., 2002). La creatina monohidrato reduce el daño muscular post-ejercicio.',
+    menus:[
+      {time:'Inmediato (0-30 min)',items:[{n:'Batido: leche + plátano + proteína whey',d:'30g proteína + 40g carbohidratos. Ventana anabólica máxima.'},{n:'Agua de coco natural',d:'Electrolitos naturales: potasio, sodio, magnesio. Superior a bebidas deportivas comerciales.'}]},
+      {time:'1-2 horas post',items:[{n:'Arroz + pollo a la plancha + aguacate',d:'Carbohidratos complejos + proteína completa + grasas antiinflamatorias.'},{n:'Ensalada de espinaca con tomate',d:'Antioxidantes que reducen el daño oxidativo muscular (vitamina C, E).'}]},
+      {time:'Noche (recuperación nocturna)',items:[{n:'Yogur griego + nueces',d:'Caseína de digestión lenta: síntesis proteica durante el sueño (Res et al., 2012).'},{n:'Infusión de jengibre o cúrcuma',d:'Antiinflamatorios naturales. Reducen el DOMS (dolor muscular de aparición tardía).'}]},
+    ],
+    macros:{c:'50%',p:'30%',g:'20%',kcal:'600-800'}
+  },
+  masa:{
+    title:'💪 Ganar Músculo',
+    goal:'Superávit calórico limpio',
+    sci:'Para ganar masa muscular se necesita un superávit de 250-500 kcal/día y una ingesta de 1.6-2.2 g de proteína por kg de peso corporal (Morton et al., 2018). La distribución en 4-5 comidas maximiza la síntesis proteica (Moore et al., 2009).',
+    menus:[
+      {time:'Desayuno (7-8 am)',items:[{n:'Avena 100g + 3 huevos revueltos + leche',d:'~600 kcal. Carbohidratos + proteína completa para empezar el día.'},{n:'Fruta de temporada',d:'Micronutrientes y fibra. Fructosa de digestión lenta.'}]},
+      {time:'Almuerzo pre-gym',items:[{n:'Arroz 200g + pollo 200g + lentejas',d:'Alto en carbohidratos y proteína. Base del superávit calórico.'},{n:'Plátano maduro',d:'Carbohidratos adicionales para el entrenamiento.'}]},
+      {time:'Post-gym',items:[{n:'Batido: 2 plátanos + avena + leche + proteína',d:'~800 kcal. La comida más importante del día para la recuperación y construcción muscular.'},{n:'Pan integral con mantequilla de maní',d:'Grasas + carbohidratos para mantener el superávit.'}]},
+      {time:'Cena',items:[{n:'Carne de res magra 150g + papa + brócoli',d:'Proteína + carbohidratos + vitaminas. Hierro de la carne para transporte de oxígeno.'},{n:'Yogur griego antes de dormir',d:'Caseína de liberación lenta para síntesis proteica nocturna.'}]},
+    ],
+    macros:{c:'50%',p:'25-30%',g:'20-25%',kcal:'3000-3500'}
+  },
+  definir:{
+    title:'✂️ Definir sin perder potencia',
+    goal:'Déficit calórico moderado',
+    sci:'Un déficit de solo 200-300 kcal/día preserva la masa muscular mientras reduce grasa (Helms et al., 2014). Mantener alta la proteína (2.2 g/kg) protege el músculo. Hacer cardio en ayunas destruye músculo: siempre come antes de entrenar.',
+    menus:[
+      {time:'Desayuno',items:[{n:'Claras de huevo 4 + 1 huevo entero + avena 60g',d:'Alta proteína, carbohidratos moderados. Déficit controlado.'},{n:'Frutas rojas (fresas, arándanos)',d:'Antioxidantes. Bajo índice glucémico. Alta saciedad.'}]},
+      {time:'Almuerzo',items:[{n:'Pechuga de pollo 200g + ensalada grande + arroz 100g',d:'Alta proteína + volumen de comida para saciedad + carbohidratos suficientes para rendir en el gym.'},{n:'Aguacate ¼',d:'Grasa saludable. Aumenta saciedad y absorción de vitaminas liposolubles.'}]},
+      {time:'Snack pre-gym',items:[{n:'Manzana + 30g de nueces',d:'Energía de liberación lenta para el entrenamiento sin elevar mucho la insulina.'}]},
+      {time:'Cena ligera',items:[{n:'Atún en agua + vegetales al vapor + papa pequeña',d:'Proteína magra + micronutrientes + carbohidratos mínimos para recuperación nocturna.'}]},
+    ],
+    macros:{c:'40%',p:'35%',g:'25%',kcal:'2200-2500'}
+  },
+  hidratacion:{
+    title:'💧 Hidratación Doble Sesión',
+    goal:'Reposición de electrolitos y fluidos',
+    sci:'Se pierde entre 0.5-2.5L de sudor por hora de ejercicio. Perder solo el 2% del peso corporal en agua reduce el rendimiento cognitivo y físico en un 10-20% (Sawka et al., 2007). El sodio es el electrolito más crítico para retener líquidos.',
+    menus:[
+      {time:'Al despertar',items:[{n:'500ml agua con pizca de sal y limón',d:'Rehidratación basal. El sodio ayuda a retener el agua en las células.'},{n:'Plátano',d:'Potasio: previene los calambres musculares.'}]},
+      {time:'Antes de la sesión (30 min)',items:[{n:'400-500ml agua o bebida electrolítica casera',d:'Hidratación pre-ejercicio. No más: el exceso genera malestar digestivo.'}]},
+      {time:'Durante (cada 15-20 min)',items:[{n:'150-200ml agua',d:'Pequeños sorbos frecuentes. No esperes a tener sed: ya es tarde.'},{n:'Bebida con sodio si sesión > 1h',d:'El sudor contiene sodio. Reponerlo retarda la fatiga.'}]},
+      {time:'Post-sesión',items:[{n:'Agua de coco 400ml',d:'Electrolitos naturales: potasio, sodio, magnesio. Rehidratación superior.'},{n:'Sandía o melón',d:'90% agua + electrolitos + carbohidratos. El mejor snack post-entreno de verano.'}]},
+    ],
+    macros:{c:'—',p:'—',g:'—',kcal:'Objetivo: 3L totales en días de doble sesión'}
+  },
+  concentracion:{
+    title:'🧠 Foco Mental — Día de Partido',
+    goal:'Rendimiento cognitivo y nervioso óptimo',
+    sci:'El cerebro consume el 20% de la glucosa corporal. La colina (huevos) es precursora de acetilcolina, el neurotransmisor del enfoque. Los ácidos grasos omega-3 mejoran la velocidad de procesamiento mental (Stonehouse et al., 2013). La cafeína mejora el tiempo de reacción (Grgic et al., 2020).',
+    menus:[
+      {time:'Desayuno (3-4h antes del partido)',items:[{n:'2 huevos + tostadas integrales + aguacate',d:'Colina (huevos) + carbohidratos de lenta digestión + grasas omega-9.'},{n:'Café negro sin azúcar',d:'Cafeína: mejora el tiempo de reacción y la concentración. Máximo 1 taza.'}]},
+      {time:'2h antes',items:[{n:'Plátano + avena + miel',d:'Carbohidratos de digestión media. Energía estable durante el partido.'},{n:'Agua 400ml',d:'Hidratación pre-partido. Sin bebidas energéticas con taurina.'}]},
+      {time:'30 min antes',items:[{n:'Gel de glucosa o dátiles 3-4',d:'Pico de energía para el arranque. Glucosa directa.'},{n:'Música + respiración controlada',d:'El ritual pre-partido activa el sistema nervioso simpático. Tan importante como la comida.'}]},
+      {time:'Medio tiempo',items:[{n:'Naranja en gajos + agua',d:'Glucosa + vitamina C + hidratación. El snack clásico del fútbol tiene respaldo científico.'}]},
+    ],
+    macros:{c:'65%',p:'15%',g:'20%',kcal:'800-1000 (3-4h antes)'}
+  }
+};
+
+/* ═══════════════════════════════════════
+   DATA — DAYS
+═══════════════════════════════════════ */
+const DAYS = {
+  lun:{warn:null,sessions:[
+    {dot:'d-am',t:'Mañana — Gym',sub:'75 min · Fuerza pierna + Core',tag:'t-acid',tl:'gym',exs:[
+      {ico:'🦵',n:'Sentadilla libre',m:['Cuádriceps','Glúteo','Core'],s:'3',r:'8',rest:'90s',desc:'Pies a ancho de hombros. Baja a paralelo. Empuja el suelo al subir.',sci:'El squat activa más de 200 músculos. Mayor activación de glúteo y cuádriceps a paralelo (Escamilla, 2001).',alt:'Sentadilla máquina Smith: mismos músculos, menos equilibrio requerido.'},
+      {ico:'⚡',n:'Prensa de pierna',m:['Cuádriceps','Glúteo'],s:'3',r:'10',rest:'75s',desc:'Pies a ancho de caderas. Baja 90°. Empuja sin bloquear rodillas.',sci:'Ideal para principiantes. Aísla el tren inferior sin demanda de estabilizadores (Escamilla, 2001).',alt:'Sentadilla hack: progresión natural.'},
+      {ico:'🚶',n:'Zancadas caminando',m:['Cuádriceps','Glúteo','Isquio'],s:'3',r:'10',rest:'60s',desc:'Paso largo. Rodilla trasera cerca del suelo. Torso erguido.',sci:'Corrige desequilibrios entre piernas frecuentes en futbolistas (Myer et al., 2011).',alt:'Step-up mancuerna: más controlado.'},
+      {ico:'🍑',n:'Hip Thrust',m:['Glúteo mayor','Isquio','Core'],s:'3',r:'10',rest:'75s',desc:'Espalda en banco. Empuja caderas arriba. 1 segundo en contracción máxima.',sci:'Mayor pico de activación del glúteo mayor de todos los ejercicios (Contreras et al., 2015).',alt:'Puente de glúteo en el suelo: menor rango, ideal para empezar.'},
+      {ico:'🔲',n:'Plancha frontal',m:['Core global','Transverso','Glúteo'],s:'3',r:'40s',rest:'45s',desc:'Cuerpo recto. Aprieta glúteo y abdomen. Respira normalmente.',sci:'Activa el transverso abdominal, estabilizador primario de la columna (McGill, 2002).',alt:'Plancha con elevación de brazo: progresión.'},
+      {ico:'◼️',n:'Plancha lateral',m:['Oblicuos','Core lateral'],s:'3',r:'25s',rest:'45s',desc:'Caderas alineadas. No dejes caer la cadera. Mira al frente.',sci:'Clave para cambios de dirección del extremo (McGill, 2002).',alt:'Plancha lateral con rotación: añade movilidad.'},
+    ]},
+    {dot:'d-field',t:'Noche — Campo',sub:'60 min · Velocidad + Movilidad',tag:'t-sky',tl:'campo',exs:[
+      {ico:'⚡',n:'Sprints 10–20m',m:['Pierna completa','Core'],s:'6',r:'rep',rest:'90s',desc:'Salida explosiva. Técnica de brazos activa. Descanso completo.',sci:'Mejora la potencia neuromuscular y la capacidad anaeróbica aláctica (Reilly & Thomas, 1976).',alt:'Sprint en cuesta: menor impacto articular.'},
+      {ico:'🎯',n:'Cambios dirección conos',m:['Cuádriceps','Core','Tobillo'],s:'3',r:'1min',rest:'90s',desc:'Zigzag entre conos. Centro de gravedad bajo al girar.',sci:'Mejora la capacidad de reactivación neuromuscular post-cambio de dirección (Sheppard & Young, 2006).',alt:'Circuito figura 8: menor intensidad, más técnica.'},
+      {ico:'🧘',n:'Movilidad post-sesión',m:['Global'],s:'1',r:'10min',rest:'—',desc:'Estiramientos activos: isquios, cuádriceps, psoas, pantorrilla.',sci:'Los estiramientos activos post-esfuerzo reducen el DOMS y mejoran el rango articular a largo plazo (Behm & Chaouachi, 2011).',alt:'Foam roller: mayor efecto sobre la rigidez miofascial.'},
+    ]},
+  ]},
+  mar:{warn:null,sessions:[
+    {dot:'d-pm',t:'Noche — Gym',sub:'75 min · Espalda + Hombro + Core',tag:'t-acid',tl:'gym',exs:[
+      {ico:'🏋️',n:'Jalón cerrado al pecho',m:['Dorsal ancho','Bíceps','Romboides'],s:'3',r:'10',rest:'75s',desc:'Agarre supino. Codos hacia las caderas al jalar.',sci:'Activa el dorsal ancho, crítico para la estabilidad del torso en carrera (Lehman et al., 2004).',alt:'Dominada asistida: progresión funcional.'},
+      {ico:'🚣',n:'Remo máquina',m:['Dorsal','Trapecio','Romboides'],s:'3',r:'10',rest:'75s',desc:'Erguido. Jala al abdomen. Aprieta escápulas.',sci:'Fortalece retractores escapulares, corrigiendo postura del futbolista.',alt:'Remo mancuerna: unilateral, más rango.'},
+      {ico:'💪',n:'Remo mancuerna',m:['Dorsal','Bíceps'],s:'3',r:'10',rest:'60s',desc:'Rodilla y mano en banco. Jala hacia cadera.',sci:'Corrige asimetrías entre pierna dominante y no dominante.',alt:'Remo invertido en barra: peso corporal.'},
+      {ico:'🎯',n:'Press militar mancuerna',m:['Deltoides','Tríceps'],s:'3',r:'10',rest:'75s',desc:'Sentado. Empuja sin arquear la espalda.',sci:'Activa los 3 haces del deltoides. Sentado reduce compensación lumbar (Saeterbakken, 2013).',alt:'Press Arnold: rotación de palmas. Mayor activación anterior.'},
+      {ico:'↔️',n:'Elevaciones laterales',m:['Deltoides medial'],s:'3',r:'12',rest:'60s',desc:'Hasta la altura del hombro. Baja 3 segundos.',sci:'Única forma directa de desarrollar el deltoides medial (Pizzari et al., 2014).',alt:'Elevaciones en polea baja: tensión constante.'},
+      {ico:'🎯',n:'Palof press polea',m:['Core','Oblicuos','Transverso'],s:'3',r:'10',rest:'60s',desc:'Lateral a la polea. Empuja sin rotar. Cambia lado.',sci:'Entrena antirotación, esencial para el regate del extremo (Behm et al., 2010).',alt:'Chop con polea: mayor activación de oblicuos.'},
+      {ico:'🐛',n:'Dead bug',m:['Transverso','Core profundo'],s:'3',r:'10',rest:'45s',desc:'Espalda pegada al suelo. Extiende opuestos alternando.',sci:'Entrena el patrón de estabilización lumbar durante movimiento de extremidades (Hibbs et al., 2008).',alt:'Bird dog: en cuadrupedia. Más fácil para empezar.'},
+    ]},
+  ]},
+  mie:{warn:'⚠️ Si hay partido hoy: cancela el campo y reduce el gym a solo core + movilidad (30 min).',sessions:[
+    {dot:'d-field',t:'Mañana — Campo',sub:'60 min · Resistencia + Técnica',tag:'t-sky',tl:'campo',exs:[
+      {ico:'🫀',n:'HIIT 30/30',m:['Cardiorrespiratorio'],s:'10',r:'rondas',rest:'activo',desc:'30s sprint / 30s trote. Calentamiento 5 min antes.',sci:'Mejora el VO2max en menor tiempo que el cardio continuo (Helgerud et al., 2007).',alt:'Tabata 20/10: mayor intensidad, menor tiempo.'},
+      {ico:'🎯',n:'Conducción zigzag conos',m:['Técnica','Concentración'],s:'1',r:'5min',rest:'—',desc:'6 conos en línea. Conducción a máxima velocidad controlada.',sci:'La técnica bajo fatiga es más transferible al partido que la técnica en estado fresco.',alt:'Conducción con pie no dominante: mayor beneficio técnico.'},
+      {ico:'💨',n:'Arranques y frenos 15m',m:['Cuádriceps','Glúteo','Isquio'],s:'5',r:'rep',rest:'60s',desc:'Sprint 15m. Frenada con rodillas semiflexionadas.',sci:'Entrena la fase de desaceleración, frecuentemente olvidada pero crucial para prevenir lesiones de rodilla (Boden et al., 2009).',alt:'Arranques desde posición de 3 apoyos: más específico de partido.'},
+    ]},
+    {dot:'d-pm',t:'Noche — Gym',sub:'60 min · Pecho + Brazo + Core',tag:'t-acid',tl:'gym',exs:[
+      {ico:'💪',n:'Press plano mancuerna',m:['Pectoral mayor','Deltoides ant.','Tríceps'],s:'3',r:'10',rest:'75s',desc:'Baja hasta codos por debajo del banco. Empuja y junta arriba.',sci:'Mayor rango que la barra. Más fibras estabilizadoras (Saeterbakken et al., 2011).',alt:'Press plano barra: más carga, menos rango.'},
+      {ico:'📐',n:'Press inclinado mancuerna',m:['Pectoral superior','Deltoides ant.'],s:'3',r:'10',rest:'75s',desc:'Banco a 30-45°. Pecho superior.',sci:'30° activa más el pectoral superior sin sobrecargar el deltoides (Trebs et al., 2010).',alt:'Press inclinado Smith: más estable.'},
+      {ico:'💪',n:'Curl con barra',m:['Bíceps','Antebrazo'],s:'3',r:'12',rest:'60s',desc:'Agarre supino. Sin mover codos. Baja 3 segundos.',sci:'Permite mayor carga. Supinación completa activa la cabeza larga del bíceps (Nakazawa et al., 1993).',alt:'Curl polea baja: tensión constante en todo el rango.'},
+      {ico:'⬇️',n:'Tríceps polea',m:['Tríceps (3 cabezas)'],s:'3',r:'12',rest:'60s',desc:'Codos fijos. Empuja hasta extender completamente.',sci:'60% del volumen del brazo es tríceps. La polea mantiene tensión constante (Boeckh-Behrens et al.).',alt:'Extensión tríceps sobre la cabeza: activa la cabeza larga.'},
+      {ico:'🔲',n:'Plancha frontal',m:['Core global'],s:'2',r:'40s',rest:'45s',desc:'Core en todas las sesiones. Aprieta glúteo y abdomen.',sci:'El core es el eslabón de transferencia de fuerza entre tren superior e inferior (McGill, 2002).',alt:'Plancha con toque de hombros: antiestabilidad añadida.'},
+    ]},
+  ]},
+  jue:{warn:'⚠️ Sin pierna pesada hoy. Si hay partido: solo activación (20 min) en la mañana.',sessions:[
+    {dot:'d-am',t:'Mañana — Gym / Activación',sub:'45 min · Hombro + Brazo',tag:'t-acid',tl:'gym',exs:[
+      {ico:'🎯',n:'Press militar mancuerna',m:['Deltoides','Tríceps'],s:'3',r:'10',rest:'60s',desc:'Ligero hoy. Control sobre carga.',sci:'Mantiene el estímulo de hombro sin acumular fatiga muscular en pierna antes del partido.',alt:'Press Arnold: variación para la misma sesión.'},
+      {ico:'↔️',n:'Elevaciones laterales',m:['Deltoides medial'],s:'3',r:'12',rest:'60s',desc:'Lento y controlado. Sin impulso.',sci:'Peso ligero. El objetivo hoy es mantenimiento, no sobrecarga.',alt:'Elevaciones laterales cable: tensión constante.'},
+      {ico:'🔄',n:'Face pull polea',m:['Deltoides post.','Manguito rotador'],s:'3',r:'12',rest:'60s',desc:'Cuerda. Jala a la cara. Codos arriba.',sci:'Salud del hombro. El manguito rotador se fatiga poco y se mantiene con poco volumen (Reinold et al., 2009).',alt:'Rotación externa con banda: sin polea disponible.'},
+      {ico:'🔨',n:'Curl martillo',m:['Bíceps','Braquial','Antebrazo'],s:'3',r:'12',rest:'45s',desc:'Agarre neutro. Sin balanceo.',sci:'Mantiene el estímulo de bíceps y braquial sin fatiga excesiva.',alt:'Curl concentrado: más aislamiento.'},
+      {ico:'⬇️',n:'Extensión tríceps',m:['Tríceps'],s:'3',r:'12',rest:'45s',desc:'Cuerda polea. Codos fijos.',sci:'Trabajo de mantenimiento. Ligero y controlado.',alt:'Fondos banco: sin polea.'},
+    ]},
+    {dot:'d-field',t:'Noche — Partido / Técnica',sub:'Partido o trabajo técnico individual',tag:'t-coral',tl:'tecnica',exs:[
+      {ico:'⚽',n:'Partido / Entrenamiento',m:['Global'],s:'1',r:'60-90min',rest:'—',desc:'Si hay partido: al 100%. Si no: técnica individual con conos. Sin sprints máximos.',sci:'La técnica practicada en estado semi-fatigado mejora la transferencia al partido real.',alt:'Rondos técnicos: si hay compañeros disponibles.'},
+    ]},
+  ]},
+  vie:{warn:null,sessions:[
+    {dot:'d-am',t:'Mañana — Gym',sub:'75 min · Potencia pierna + Core explosivo',tag:'t-acid',tl:'gym',exs:[
+      {ico:'🦵',n:'Sentadilla (progresión)',m:['Cuádriceps','Glúteo','Isquio'],s:'3',r:'6',rest:'120s',desc:'Más peso que el lunes. Fase concéntrica explosiva.',sci:'La sentadilla con menos reps y más peso desarrolla la fuerza máxima, base de la potencia (Kraemer & Ratamess, 2004).',alt:'Sentadilla pausa (2s abajo): mayor demanda neuromuscular.'},
+      {ico:'🏋️',n:'Peso muerto rumano',m:['Isquio','Glúteo','Espalda baja'],s:'3',r:'8',rest:'90s',desc:'Bisagra de cadera. Espalda recta. Siente el estiramiento.',sci:'Trabaja los isquios en el rango excéntrico más crítico para la prevención de lesiones en sprint (Schache et al., 2010).',alt:'Good morning: mismo patrón, más énfasis lumbar.'},
+      {ico:'📦',n:'Step-up mancuerna',m:['Cuádriceps','Glúteo'],s:'3',r:'10',rest:'60s',desc:'Una pierna. Sin impulso. Controlado.',sci:'Trabajo unilateral que mejora la fuerza específica para la zancada del sprint (Myer et al., 2011).',alt:'Sentadilla búlgara: mayor demanda de estabilidad.'},
+      {ico:'🌀',n:'Rueda abdominal',m:['Core','Transverso','Dorsal'],s:'3',r:'8',rest:'60s',desc:'Extiende lento. Abdomen contrae para volver.',sci:'Mayor activación de recto abdominal de todos los ejercicios de core (Escamilla et al., 2010).',alt:'Rollout con barra: misma mecánica.'},
+      {ico:'⚽',n:'Slam balón medicinal',m:['Core','Dorsal','Hombros'],s:'3',r:'10',rest:'60s',desc:'Balón sobre la cabeza. Lanza al suelo con toda la fuerza.',sci:'Combina fuerza y potencia. Mejora absorción de impacto, clave para futbolistas (Faigenbaum et al., 2009).',alt:'Russian twist con balón: si no hay espacio para el slam.'},
+    ]},
+    {dot:'d-field',t:'Noche — Campo',sub:'50 min · Velocidad + Agilidad',tag:'t-sky',tl:'campo',exs:[
+      {ico:'💨',n:'Sprints largos 30–40m',m:['Global'],s:'4',r:'rep',rest:'2min',desc:'Sprint máximo. Descanso completo. Calidad > cantidad.',sci:'Mejoran la velocidad máxima alcanzable. Aunque los sprints de partido son cortos, Vmax influye en todos (Haugen et al., 2013).',alt:'Sprint en cuesta: mayor resistencia, menos impacto.'},
+      {ico:'🎯',n:'Circuito conos (figura 8)',m:['Core','Cuádriceps','Tobillo'],s:'3',r:'1min',rest:'90s',desc:'2 conos a 5m. Figura de 8. Centro de gravedad bajo.',sci:'Mejora la agilidad reactiva, la diferencia entre esquivar y no esquivar al rival (Sheppard & Young, 2006).',alt:'Zigzag lineal: más velocidad, menos complejidad.'},
+      {ico:'🧘',n:'Cierre de semana',m:['Global'],s:'1',r:'10min',rest:'—',desc:'Estiramientos pasivos completos. Respiración diafragmática.',sci:'La respiración diafragmática activa el sistema nervioso parasimpático, acelerando la recuperación (Bradley & Esformes, 2014).',alt:'Baño frío (si disponible): vasoconstricción que reduce la inflamación muscular.'},
+    ]},
+  ]},
+  sab:{warn:null,sessions:[
+    {dot:'d-field',t:'Mañana — Descanso activo',sub:'Opcional · Suave',tag:'t-muted',tl:'movilidad',exs:[
+      {ico:'🚶',n:'Trote suave 20-25 min',m:['Cardiorrespiratorio'],s:'1',r:'20min',rest:'—',desc:'Ritmo de conversación. Nunca al límite.',sci:'Mejora el clearance de lactato y activa la circulación sin generar fatiga adicional (Bishop et al., 2008).',alt:'Natación: sin impacto articular. Ideal si hay acceso.'},
+      {ico:'⚽',n:'Técnica libre (opcional)',m:['Técnica'],s:'1',r:'30min',rest:'—',desc:'Control, conducción, tiros sin presión.',sci:'La práctica libre sin presión mejora la automatización técnica (práctica distribuida). No hagas sprints.',alt:'Fútbol reducido con amigos: socialización + técnica.'},
+    ]},
+  ]},
+  dom:{warn:null,sessions:[
+    {dot:'d-rest',t:'Descanso completo',sub:'El músculo crece hoy',tag:'t-muted',tl:'movilidad',exs:[
+      {ico:'😴',n:'Recuperación total',m:['Todo el cuerpo'],s:'—',r:'—',rest:'—',desc:'Sin gym, sin campo. Duerme 8-9 horas. Hidratate. Come bien.',sci:'El 80% de la síntesis proteica muscular ocurre durante el sueño (Van Cauter et al., 2000). El descanso NO es opcional: es parte activa del entrenamiento.',alt:'Estiramientos suaves 15 min: si sientes tensión residual.'},
+    ]},
+  ]},
+};
+
+/* ═══════════════════════════════════════
+   DATA — TIPS
+═══════════════════════════════════════ */
+const TIPS = [
+  {ico:'🎯',tag:'t-acid',tagTxt:'Fundamental',title:'Técnica antes que peso',
+   body:'Como principiante tu prioridad absoluta es aprender el patrón motor, no levantar mucho. Un mal movimiento repetido 1000 veces construye una lesión. Un buen movimiento repetido 1000 veces construye músculo. El sistema nervioso central aprende primero; los músculos crecen después.',
+   hi:'Empieza con el 60% del peso que crees poder mover. Si el movimiento es limpio durante 3 sesiones consecutivas, sube un 5%.',
+   sci:'La neuroplasticidad motora requiere entre 300 y 500 repeticiones correctas para automatizar un patrón de movimiento (Schmidt & Lee, 2011). Apresurarse con el peso interrumpe ese proceso.'},
+  {ico:'⚡',tag:'t-sky',tagTxt:'Campo',title:'Activación pre-entrenamiento: los 8 minutos que cambian todo',
+   body:'Antes de cualquier sesión: movilidad articular en caderas, hombros y tobillos (3 min) + sentadillas sin peso (2×10) + saltos pequeños (2×10) + rotaciones de torso (20 rep). Esto eleva la temperatura muscular, activa el sistema nervioso y reduce el riesgo de lesión hasta un 35%.',
+   hi:'Un músculo frío contrae con un 15% menos de fuerza que uno caliente. La activación no es optativa.',
+   sci:'El calentamiento aumenta la conductancia nerviosa, la elasticidad del tendón y el reclutamiento de fibras rápidas. 8 minutos son suficientes para alcanzar el umbral de temperatura óptimo (35.5-39°C) (Bishop, 2003).'},
+  {ico:'🫀',tag:'t-amber',tagTxt:'Respiración',title:'Respiración en el ejercicio: la técnica que nadie enseña',
+   body:'Regla general: EXHALA en el esfuerzo (cuando subes, empujas o jalas la carga), INHALA en la fase de regreso. En sentadilla: inhala bajando, exhala subiendo. En curl: exhala al subir el peso. Nunca retengas el aire más de 2 segundos. Una respiración correcta estabiliza la columna a través de la presión intraabdominal.',
+   hi:'La maniobra de Valsalva (retener el aire brevemente) es válida solo para cargas muy altas y durante 1-2 segundos. Para el resto, respira siempre.',
+   sci:'La presión intraabdominal generada por la respiración correcta actúa como un cinturón natural de la columna. Es el mecanismo de estabilización más importante descubierto por McGill (2002).'},
+  {ico:'⚽',tag:'t-coral',tagTxt:'Fútbol',title:'Entrenamiento específico para extremo: lo que nadie te dice',
+   body:'Tu cuerpo necesita ser potente y ligero. Evita el volumen excesivo (más de 20 series por sesión). Prioriza ejercicios compuestos: sentadilla, hip thrust, jalones, remo. La fuerza funcional que transfiere al campo viene de movimientos multiarticulares, no del curl concentrado. El gym es un complemento al fútbol, no el objetivo.',
+   hi:'Si sientes las piernas pesadas en el calentamiento del partido, significa que no redujiste la carga el jueves. El plan ya contempla esto.',
+   sci:'Los futbolistas de élite realizan en promedio 700 cambios de actividad por partido, incluyendo 100-150 sprints (Reilly & Thomas, 1976). El entrenamiento debe replicar esta demanda intermitente, no el volumen del culturista.'},
+  {ico:'🔥',tag:'t-mint',tagTxt:'Core',title:'Core: por qué es tu prioridad #1 como extremo',
+   body:'El core no es el six-pack. Es todo el cilindro que rodea tu columna: transverso abdominal, multífido, diafragma y suelo pélvico. Un core fuerte significa: más potencia en el disparo (la fuerza viaja del suelo al balón a través del core), mejor equilibrio en el 1vs1, mayor resistencia a las cargas defensivas, y menos lesiones de rodilla y cadera.',
+   hi:'El core debe entrenarse en CADA sesión. 10 minutos de core bien hechos vale más que 30 minutos de abdominales rápidos y sin control.',
+   sci:'El 70% de las lesiones de rodilla en fútbol están relacionadas con debilidad o fatiga del core (Hewett et al., 2005). La transferencia de fuerza entre tren inferior y superior depende enteramente de la rigidez del core (McGill, 2002).'},
+  {ico:'😴',tag:'t-violet',tagTxt:'Recuperación',title:'El descanso es entrenamiento: la ciencia del sueño',
+   body:'El 80% de la síntesis proteica muscular y la liberación de hormona del crecimiento ocurre durante el sueño profundo (fases 3 y 4 del sueño). Sin 7-9 horas de sueño, lo que construiste en el gym se degrada en lugar de adaptarse. El domingo de descanso no es flojera: es el momento donde el cuerpo supera el nivel anterior.',
+   hi:'Si llevas 3 días con fatiga persistente, falta de motivación o rendimiento en caída: no es debilidad mental, es señal biológica de que necesitas más descanso.',
+   sci:'La privación de sueño (menos de 6h) reduce la producción de testosterona entre un 10-15% y aumenta el cortisol (hormona del estrés catabólico) entre un 15-20%. El resultado es que entrenas pero no mejoras (Leproult & Van Cauter, 2011).'},
+  {ico:'💧',tag:'t-sky',tagTxt:'Hábitos',title:'Hidratación y nutrición: los pilares invisibles',
+   body:'Mínimo 2.5-3L de agua al día en días de doble sesión. Come proteína en cada comida (1.6-2.2g por kg de peso corporal). Come carbohidratos antes del gym: son tu gasolina. No entrenes en ayunas hasta llevar meses adaptado. Si tienes calambres: no es falta de agua, es falta de sodio y magnesio.',
+   hi:'Un truco fácil: orina de color amarillo pálido = bien hidratado. Amarillo oscuro = toma agua ahora. Transparente = tomaste demasiada y diluis los electrolitos.',
+   sci:'Perder solo el 2% del peso corporal en agua reduce el rendimiento físico y cognitivo hasta un 10-20%. Para un joven de 70kg eso son apenas 1.4L de sudor, la cantidad que se pierde fácilmente en una sesión intensa (Sawka et al., 2007).'},
+  {ico:'📈',tag:'t-amber',tagTxt:'Progresión',title:'Sobrecarga progresiva: el principio que lo cambia todo',
+   body:'El músculo solo crece si recibe un estímulo mayor al que ya maneja. Cada 2-3 semanas, sube algo: el peso (5-10%), las repeticiones (1-2 más), el tiempo bajo tensión (bajar más lento) o reducir el descanso. Si llevas 4 semanas haciendo exactamente lo mismo sin cambios, tu progreso se detuvo.',
+   hi:'Lleva un registro. No necesitas una app sofisticada: una nota en el celular con el peso y las reps de cada ejercicio es suficiente para aplicar progresión.',
+   sci:'El principio de sobrecarga progresiva fue formalizado por el fisioterapeuta Thomas DeLorme en 1945. Sigue siendo el principio número uno del entrenamiento de fuerza respaldado por toda la literatura científica posterior (Kraemer & Ratamess, 2004).'},
+];
+
+/* ═══════════════════════════════════════
+   UI FUNCTIONS
+═══════════════════════════════════════ */
+function go(id, btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function pickDay(day, el){
+  document.querySelectorAll('.dp').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  renderDay(day);
+}
+
+function renderDay(day){
+  const d = DAYS[day];
+  let h = '';
+  if(d.warn) h += `<div class="warn-bar">⚠️ ${d.warn}</div>`;
+  h += '<div class="sessions-wrap">';
+  d.sessions.forEach(s=>{
+    h += `<div class="sess-card">
+      <div class="sess-head">
+        <div class="sess-dot ${s.dot}"></div>
+        <div class="sess-info"><h3>${s.t}</h3><p>${s.sub}</p></div>
+        <span class="tag ${s.tag}">${s.tl}</span>
+      </div>
+      <div class="ex-list">
+        ${s.exs.map(ex=>`
+          <div class="ex-row" onclick='openEx(${JSON.stringify(ex)})'>
+            <span class="ex-ico">${ex.ico}</span>
+            <div class="ex-info"><h4>${ex.n}</h4><p>${ex.m.slice(0,2).join(' · ')}</p></div>
+            <span class="ex-sets">${ex.s}×${ex.r}</span>
+            <span class="ex-arr">›</span>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  });
+  h += '</div>';
+  document.getElementById('day-out').innerHTML = h;
+}
+
+function openEx(ex){
+  document.getElementById('ex-title').textContent = ex.n.toUpperCase();
+  document.getElementById('ex-icon').textContent = ex.ico;
+  document.getElementById('ex-sets').textContent = ex.s;
+  document.getElementById('ex-reps').textContent = ex.r;
+  document.getElementById('ex-rest').textContent = ex.rest;
+  document.getElementById('ex-desc').textContent = ex.desc;
+  document.getElementById('ex-sci').textContent = ex.sci || '';
+  document.getElementById('ex-alt').textContent = ex.alt || '';
+  document.getElementById('ex-sci-box').style.display = ex.sci ? 'block' : 'none';
+  document.getElementById('ex-alt-box').style.display = ex.alt ? 'block' : 'none';
+  const tags = (ex.m||[]).map((m,i)=>`<span class="m-tag ${i===0?'pri':''}">${m}</span>`).join('');
+  document.getElementById('ex-muscles').innerHTML = tags;
+  openSheet('ov-ex','sh-ex');
+}
+
+function openMuscle(g){
+  const data = EX[g];
+  if(!data) return;
+  const names = {pierna:'PIERNA',pecho:'PECHO',espalda:'ESPALDA',hombro:'HOMBRO',brazo:'BRAZO',core:'CORE',cardio:'CARDIO',pliometria:'PLIOMETRÍA'};
+  document.getElementById('muscle-title').textContent = names[g]||g.toUpperCase();
+  const h = data.map(ex=>`
+    <div class="ex-row" onclick='openEx(${JSON.stringify(ex)})'>
+      <span class="ex-ico">${ex.ico}</span>
+      <div class="ex-info"><h4>${ex.n}</h4><p>${ex.m.slice(0,2).join(' · ')}</p></div>
+      <span class="ex-sets">${ex.s}×${ex.r}</span>
+      <span class="ex-arr">›</span>
+    </div>`).join('');
+  document.getElementById('muscle-content').innerHTML = `<div class="ex-list">${h}</div>`;
+  openSheet('ov-muscle','sh-muscle');
+}
+
+function openSheet(ov, sh){
+  document.getElementById(ov).classList.add('on');
+  setTimeout(()=>document.getElementById(sh).classList.add('on'),10);
+}
+function closeSheet(ov, sh){
+  document.getElementById(sh).classList.remove('on');
+  setTimeout(()=>document.getElementById(ov).classList.remove('on'),360);
+}
+
+/* ─── TIPS RENDER ─── */
+function renderTips(){
+  document.getElementById('tips-list').innerHTML = TIPS.map((t,i)=>`
+    <div class="tip-card" id="tip${i}">
+      <div class="tip-head" onclick="toggleTip('tip${i}')">
+        <span class="tip-ico">${t.ico}</span>
+        <h3>${t.title}</h3>
+        <span class="tag ${t.tag}" style="flex-shrink:0">${t.tagTxt}</span>
+        <span class="tip-chev">▾</span>
+      </div>
+      <div class="tip-body">
+        ${t.body}
+        <div class="tip-hi">✓ ${t.hi}</div>
+        <div class="tip-sci">🔬 ${t.sci}</div>
+      </div>
+    </div>`).join('');
+}
+function toggleTip(id){
+  const c = document.getElementById(id);
+  c.classList.toggle('on');
+  c.querySelector('.tip-body').style.display = c.classList.contains('on') ? 'block' : 'none';
+}
+
+/* ─── AI GYM ─── */
+function switchAI(tab, btn){
+  document.querySelectorAll('.ai-tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('ai-gym').style.display = tab==='gym' ? 'block' : 'none';
+  document.getElementById('ai-nutri').style.display = tab==='nutri' ? 'block' : 'none';
+}
+function askMachine(id){
+  const m = MACHINES[id];
+  if(!m) return;
+  const pri = m.pri.map(t=>`<span class="tag t-acid">${t}</span>`).join(' ');
+  const sec = m.sec.map(t=>`<span class="tag t-muted">${t}</span>`).join(' ');
+  const bubble = `<div class="b-ai" style="max-width:95%">
+    <strong>${m.ico} ${m.n}</strong>
+    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">${pri}${sec}</div>
+    ${m.tip}
+  </div>`;
+  document.getElementById('chat-gym').innerHTML += bubble;
+  document.getElementById('chat-gym').scrollTop = 99999;
+}
+function sendGym(){
+  const inp = document.getElementById('gym-input');
+  const q = inp.value.trim(); if(!q) return;
+  document.getElementById('chat-gym').innerHTML += `<div class="b-user">${q}</div>`;
+  inp.value = '';
+  setTimeout(()=>{
+    const found = Object.values(MACHINES).find(m=>
+      m.n.toLowerCase().includes(q.toLowerCase()) ||
+      q.toLowerCase().includes(m.n.toLowerCase().split(' ')[0].toLowerCase())
+    );
+    if(found) askMachineObj(found);
+    else{
+      document.getElementById('chat-gym').innerHTML += `<div class="b-ai">No encontré "${q}" exactamente. Intenta buscar: Prensa, Jalón, Polea, Pec Deck, Remo, Hip Thrust, Femoral, Medicinal, Yoga.</div>`;
+    }
+    document.getElementById('chat-gym').scrollTop = 99999;
+  },500);
+}
+function askMachineObj(m){
+  const pri = m.pri.map(t=>`<span class="tag t-acid">${t}</span>`).join(' ');
+  const sec = m.sec.map(t=>`<span class="tag t-muted">${t}</span>`).join(' ');
+  document.getElementById('chat-gym').innerHTML += `<div class="b-ai" style="max-width:95%">
+    <strong>${m.ico} ${m.n}</strong>
+    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">${pri}${sec}</div>
+    ${m.tip}
+  </div>`;
+}
+
+/* ─── AI NUTRICIÓN ─── */
+function showMenu(goal){
+  const m = MENUS[goal]; if(!m) return;
+  document.getElementById('chat-nutri').innerHTML += `<div class="b-user">¿Qué como para: ${m.goal}?</div>`;
+  openNutriSheet(goal);
+}
+function sendNutri(){
+  const inp = document.getElementById('nutri-input');
+  const q = inp.value.trim(); if(!q) return;
+  document.getElementById('chat-nutri').innerHTML += `<div class="b-user">${q}</div>`;
+  inp.value = '';
+  const map = {
+    'energía':'energia','energia':'energia','energy':'energia',
+    'recuperar':'recuperacion','recuperaci':'recuperacion','post':'recuperacion',
+    'músculo':'masa','musculo':'masa','ganar':'masa','masa':'masa',
+    'defin':'definir','cortar':'definir',
+    'agua':'hidratacion','hidrat':'hidratacion',
+    'foco':'concentracion','partido':'concentracion','ment':'concentracion'
+  };
+  const key = Object.keys(map).find(k=>q.toLowerCase().includes(k));
+  if(key){
+    openNutriSheet(map[key]);
+  } else {
+    setTimeout(()=>{
+      document.getElementById('chat-nutri').innerHTML += `<div class="b-ai"><strong>🥗 Nutricionista VRTX</strong> Puedo ayudarte con: energía, recuperación, ganar músculo, definir, hidratación o foco mental para partido. ¿Cuál necesitas?</div>`;
+    },400);
+  }
+}
+function openNutriSheet(goal){
+  const m = MENUS[goal];
+  document.getElementById('nutri-title').textContent = m.title;
+  let h = `<div class="science-note"><strong>🔬 Base científica:</strong> ${m.sci}</div>`;
+  m.menus.forEach(block=>{
+    h += `<div class="menu-card">
+      <div class="menu-time">${block.time}</div>
+      ${block.items.map(it=>`<div class="menu-item"><strong>${it.n}</strong>${it.d}</div>`).join('')}
+    </div>`;
+  });
+  h += `<div class="menu-card" style="margin-top:0">
+    <div class="menu-time">Macros objetivo</div>
+    <div class="menu-macros">
+      <div class="macro-b"><div class="mv">${m.macros.c}</div><div class="ml">Carbos</div></div>
+      <div class="macro-b"><div class="mv">${m.macros.p}</div><div class="ml">Proteína</div></div>
+      <div class="macro-b"><div class="mv">${m.macros.g}</div><div class="ml">Grasas</div></div>
+    </div>
+    <div class="menu-item"><strong>Calorías aprox:</strong>${m.macros.kcal}</div>
+  </div>`;
+  document.getElementById('nutri-content').innerHTML = h;
+  openSheet('ov-nutri','sh-nutri');
+}
+
+/* ─── INIT ─── */
+renderDay('mar');
+renderTips();
+document.getElementById('gym-input').addEventListener('keydown',e=>{if(e.key==='Enter')sendGym()});
+document.getElementById('nutri-input').addEventListener('keydown',e=>{if(e.key==='Enter')sendNutri()});
+// Init tips display
+document.querySelectorAll('.tip-body').forEach(b=>b.style.display='none');
+// Service Worker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
